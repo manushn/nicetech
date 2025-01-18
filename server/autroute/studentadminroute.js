@@ -2,6 +2,7 @@ const express=require('express');
 const router=express.Router();
 const StudentModel=require('../schemas/studentschema');
 const {verifytoken}=require("../verifytoken");
+const UserModel=require("../schemas/loginuserschema")
 
 //Route to get student details
 router.post('/getstudent',async(req , res)=>{
@@ -28,13 +29,18 @@ router.post('/getstudent',async(req , res)=>{
 //-------------------------------------------------------------------
 //Route to Add Students
 router.post('/addstudent',async(req,res)=>{
+    
   const {courtest_title,studentname,gender,dob,department,
     batch,contactnumber,email, place,address,parentname,pcontactnumber,
-    studymode,staymode,travelmode,status} =req.body;
+    studymode,staymode,travelmode,status,admiteddate} =req.body;
+
+    console.log(courtest_title,studentname,gender,dob,department,
+        batch,contactnumber,email, place,address,parentname,pcontactnumber,
+        studymode,staymode,travelmode,status,admiteddate);
 
   if(!courtest_title||!studentname||!gender||!dob||!department||
     !batch||!contactnumber||!email||!place||!address||!parentname||!pcontactnumber||
-    !studymode||!staymode||!travelmode||!status){
+    !studymode||!staymode||!travelmode||!status||!admiteddate){
         return res.status(203).json({message:"All fields are required"});    
   };
 
@@ -74,11 +80,21 @@ try{
         studymode,
         staymode,
         travelmode,
-        status
+        status,
+        admiteddate
 
     });
+
+    const newUser = new UserModel({
+                    username: stuID,
+                    password:dob,
+                    email,
+                    role:'student',
+                    name: studentname,
+                });
      await newstudent.save();
-    res.status(200).json({message:"Student Added  Successfully!"})
+     await newUser.save();
+    res.status(200).json({message:"Student Added  Successfully!",success:true})
 }catch(error){
     res.status(203).json({message:"Error in adding student details"})
     console.log('Error in adding student',error)

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import "./css/managestudents.css"
+import axios from 'axios';
 
+const backendurl='http://192.168.1.23:3000/';
 
 
 function Managestudents() {
@@ -26,8 +28,11 @@ function Managestudents() {
   const [staymode,setstaymode]=useState('');
   const [travelmode,settravelmode]=useState('');
   const [status,setstatus]=useState('');
+  const [admiteddate,setadmiteddate]=useState('');
 
   const [batchmessage,setbatchmessage]=useState('');
+  const [contactnumessage,setcontactnummessage]=useState('');
+  const [pcontactnumessage,setpcontactnummessage]=useState('');
 
   //Use effect to verify batch 
 
@@ -38,6 +43,87 @@ function Managestudents() {
       console.log("UseEffect run")
     }
   },[batch]);
+
+  useEffect(() => {
+    if (contactnumber.length === 0 || contactnumber.length === 10) {
+      setcontactnummessage('');
+    }
+  
+    if (contactnumber.length > 10) {
+      setcontactnummessage('Number must be 10 digits');
+      setcontactnumber('');
+    }
+  
+    if (contactnumber.length < 10 && contactnumber.length > 0) {
+      setcontactnummessage('Number must be 10 digits');
+    }
+  }, [contactnumber]);
+
+  useEffect(() => {
+    if (pcontactnumber.length === 0 || pcontactnumber.length === 10) {
+      setpcontactnummessage('');
+    }
+  
+    if (pcontactnumber.length > 10) {
+      setpcontactnummessage('Number must be 10 digits');
+      setpcontactnumber('');
+    }
+  
+    if (pcontactnumber.length < 10 && pcontactnumber.length > 0) {
+      setpcontactnummessage('Number must be 10 digits');
+    }
+  }, [pcontactnumber]);
+
+  
+
+
+  const handeladdstudent= async()=>{
+    alert("addbutton clicked")
+   try{
+        const token = sessionStorage.getItem('token');
+
+        const newstudent={
+          courtest_title:courtesyTitle,
+          studentname,
+          gender,
+          dob,
+          department,
+          batch,
+          contactnumber,
+          email, 
+          place,
+          address,
+          parentname,
+          pcontactnumber,
+          studymode,
+          staymode,
+          travelmode,
+          status,
+          admiteddate
+        };
+
+        const response = await axios.post(
+          `${backendurl}admin/addstudent`,
+          newstudent,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
+        console.log("response for add send")
+        if (response.data.success){
+          alert("Student Updated")
+        }
+
+        if (response.data.message){
+          alert(response.data.message)
+        }
+        console.log("Received response")
+   }catch(error){
+    alert(error)
+   } 
+  }
 
   const courtesy_titlename=[
     { value: '', label: 'Courtesy_title' },
@@ -148,7 +234,7 @@ function Managestudents() {
                 <input
                 value={studentname}
                 placeholder='student Name'
-                onChange={(e)=>setstudentname(e.target.value.toUpperCase)}
+                onChange={(e)=>setstudentname(e.target.value.toUpperCase())}
                 />
 
                 <label>Gender</label>
@@ -198,41 +284,45 @@ function Managestudents() {
 
               <label>Contact Number</label>
               <input
+              type='number'
               value={contactnumber}
               placeholder='Contact Number'
               onChange={(e)=>setcontactnumber(e.target.value)}
               />
+              <p>{contactnumessage}</p>
 
               <label>Email</label>
               <input
               value={email}
-              onChange={(e)=>setemail(e.target.value.toLowerCase)}
+              onChange={(e)=>setemail(e.target.value.toLowerCase())}
               placeholder='example@gmail.com'
               />
 
               <label>Place</label>
               <input
               value={place}
-              onChange={(e)=>setplace(e.target.value.toUpperCase)}
+              onChange={(e)=>setplace(e.target.value.toUpperCase())}
               />
 
               <label>Address</label>
               <input
               value={address}
-              onChange={(e)=>setaddress(e.target.value.toUpperCase)}
+              onChange={(e)=>setaddress(e.target.value.toUpperCase())}
               />
 
               <label>Parent Name</label>
               <input
               value={parentname}
-              onChange={(e)=>setparentname(e.target.value.toUpperCase)}
+              onChange={(e)=>setparentname(e.target.value.toUpperCase())}
               />
+              
 
               <label>Parent Contact Number</label>
               <input
               value={pcontactnumber}
               onChange={(e)=>setpcontactnumber(e.target.value)}
               />
+              <p>{pcontactnumessage}</p>
 
               <label>Study Mode</label>
               <select
@@ -241,6 +331,19 @@ function Managestudents() {
                 required
                >
                   {studymodeselect.map((optionS) => (
+                    <option key={optionS.value} value={optionS.value}>
+                      {optionS.label}
+                    </option>
+                  ))}
+               </select>
+
+               <label>Study Mode</label>
+              <select
+                value={staymode}
+                onChange={(e) => setstaymode(e.target.value)}
+                required
+               >
+                  {staymodeselect.map((optionS) => (
                     <option key={optionS.value} value={optionS.value}>
                       {optionS.label}
                     </option>
@@ -271,10 +374,16 @@ function Managestudents() {
                  ))}
                </select>
 
-               <div className="addstubtn">
-                <button>Add Student</button>
-               </div>
+               <label>Date Of Admition</label>
+               <input
+               value={admiteddate}
+               type='date'
+               onChange={(e)=>setadmiteddate(e.target.value)}
+               />
 
+               <div className="addstubtn">
+                <button onClick={handeladdstudent}>Add Student</button>
+               </div>
 
                </div>
               </div>
