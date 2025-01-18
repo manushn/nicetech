@@ -281,7 +281,7 @@ function Managestudents() {
           </div>
          ):(
           <div className="stubatchcon">
-              <h1>Student details</h1>
+              <h1>Student detail</h1>
           </div>
          )}
       </div>
