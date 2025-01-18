@@ -1,0 +1,99 @@
+.maindash{
+    max-height: 100%; /* Adjust the height as needed */
+  overflow-y: auto;
+  padding-left: 10px;
+}
+
+.cards{
+  display: flex;
+  justify-content: space-between;
+  padding:4%;
+  
+  
+}
+
+
+.totalstu{
+  background-image: linear-gradient(to right, #fe9e1e , #fbd000);
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  color:black;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.totalstu img{
+  padding-top: 20px;
+  padding-left: 10px;
+}
+
+.totalstaf{
+  background-image: linear-gradient(to right, #f600fb , #f25c78);
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+}
+
+.totalstaf img{
+  padding-top: 20px;
+  padding-left: 10px;
+}
+
+.totalfees{
+  background-image: linear-gradient(to right, #921efe , #00ddfb);
+  color: white;
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+.totalfees img{
+  padding-top: 20px;
+  padding-left: 10px;
+  
+}
+
+
+@media only screen and (max-width: 1200px){
+  .cards{
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+  }
+
+  .totalstu{
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-left: 80px;
+  }
+  .totalstaf{
+    margin-bottom: 10px;
+    padding:10px;
+    padding-left: 80px;
+  }
+  .totalfees{
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-left: 80px;
+  }
+}
+
+@media only screen and (max-width: 800px){
+
+  .totalstu{
+    padding-left: 10px;
+  }
+  .totalstaf{
+    padding-left: 10px;
+  }
+  .totalfees{
+    padding-left: 10px;
+  }
+  
+}

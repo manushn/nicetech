@@ -1,0 +1,104 @@
+.signupcon{
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    
+}
+
+.signupmain{
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    padding: 30px;
+    border: 1px black solid;
+    border-radius: 20px;
+    box-shadow: 3px 2px 1px grey;
+    max-width: 210px;
+}
+
+.signupmain:hover{
+    box-shadow: 3px 2px 8px;
+}
+
+.signupmain label{
+    font-size: 19px;
+
+}
+.signupmain p{
+    font-size: 15px;
+    color: red;
+}
+
+.signupmain button{
+    border: none;
+    background-color: rgb(13, 214, 13);
+    color: white;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.signupmain button:hover{
+    background-color: white;
+    color:rgb(13, 214, 13);
+    border: 1px solid rgb(13, 214, 13);
+}
+
+.loginredirect button{
+    background-color:aliceblue ;
+    color: black;
+    font-weight: 100;
+    margin-top: 10px;
+}
+
+.loginredirect button:hover{
+    background-color:aliceblue ;
+    color:rgb(13, 214, 13);
+    border:none ;
+
+}
+.signupotp-container{
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    padding: 30px;
+    border: 1px solid black;
+    border-radius: 20px;
+   
+}
+
+.signupotp{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.resendotp button{
+   border: none;
+   background-color: aliceblue;
+   margin-top:20px;
+}
+
+.otpsubmit button{
+    border: 1px solid rgb(13, 214, 13);
+    background-color: rgb(13, 214, 13);
+    border-radius: 20px;
+    margin-top: 20px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+
+}
+.otpsubmit button:hover{
+    background-color: white;
+    color: rgb(13, 214, 13) ;
+}
+.otpsubmit{
+    display: flex;
+    justify-content: center;
+}
+
+.messagep p{
+    color: red;
+    text-align: center;
+}

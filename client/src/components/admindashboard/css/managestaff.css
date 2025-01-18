@@ -1,0 +1,294 @@
+.staffcontent{
+  max-height: 100%;
+  width:100%; /* Adjust the height as needed */
+  overflow-y: auto;
+  padding-left: 10px;
+}
+.stafftop {
+    display: flex;
+    flex-direction: column;
+    
+}
+.stafftop h3{
+    font-size: 40px;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.top_buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-top: 0;
+}
+
+.addstaff {
+    text-align: end;
+    padding-right: 20px;
+    width: 200px;
+    
+}
+
+.addstaff ul {
+    list-style-type: none;
+}
+
+.addstaff ul li {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background-color: rgb(4, 167, 4);
+    max-width: 110px;
+    padding: 5px;
+    border-radius: 20px;
+    padding-left: 19px;
+    color: white;
+}
+
+.serchbutton {
+    text-align: start;
+    display: flex;
+    align-items: center;
+}
+
+.searchbutton input {
+    margin-right: 10px;
+}
+.searchbutton button {
+    background-color: rgb(4,167,4);
+    border: none;
+    border-radius: 20px;
+    padding:10px;
+    color:white;
+    margin-right: 10px;
+}
+
+.staffcards{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+.staffcards {
+    display: flex;
+    flex-wrap: wrap; /* Allows wrapping */
+    gap: 16px; /* Adds space between cards */
+    justify-content: space-evenly; /* Centers cards */
+    padding: 16px;
+    
+  }
+  
+  .staffcard {
+    display: flex;
+    flex: 1 1 calc(25% - 32px); /* Adjusts card width to 25% minus gap */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    justify-content: space-between;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    min-width: 350px; /* Ensures a minimum width for cards */
+    max-width: 350px; /* Optional: Limits max width */
+  }
+   
+.staffcard h5{
+    text-align: center;
+}
+.staffbottom{
+    padding-top:30px;
+}
+
+.staffcard img{
+  width:100px;
+
+}
+.addstafffill{
+  display:flex;
+  flex-direction: column;
+  padding:60px;
+  border: 1px solid grey;
+  padding-top: 50px;
+  padding-bottom: 30px;
+  border-radius: 20px;
+  background-color: white;
+  max-width: 500px;
+  justify-content:left;
+  
+}
+.addstafffill:hover{
+  box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.3)
+}
+.addstafffill input{
+  margin-left: 3%;
+  margin-bottom: 10px;
+  border: 1px black solid;
+
+}
+.addstafffill label{
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  
+}
+.addstafffill button{
+  margin-top: 30px;
+  width: 100px;
+  margin-left: 60px;
+  background-color: rgb(33, 239, 47);
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  
+}
+
+.addstafffill select {
+  width:220px;
+  padding: 10px;
+  border: 1px solid balck;
+  border-radius: 10px;
+}
+.staffaddportop{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+.staffviews{
+  display: flex;
+  justify-content: center;
+  
+}
+.staffselview{
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  padding:30px;
+  border-radius: 20px;
+  
+}
+.selstaffview button:hover{
+  background-color: white;
+  color:rgb(108, 226, 104) ;
+  border:1px solid rgb(108, 226, 104);
+  font-weight: bold;
+}
+.staffselview {
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+}
+.selstaffedit{
+  display: flex;
+  flex-direction: column;
+  
+}
+.selstaffedit button{
+  margin-top: 20px;
+  width:80px;
+  padding:10px;
+  border-radius: 20px;
+  border: none;
+  background-color: rgb(108, 226, 104);
+  color: white;
+  font-weight: bold;
+  align-items: center;
+  
+}
+.selstaffedit button:hover{
+  background-color: white;
+  color:rgb(108, 226, 104) ;
+  border:1px solid rgb(108, 226, 104);
+  font-weight: bold;
+}
+.s1{
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  width:230px;
+
+}
+.s1 select{
+  padding: 10px;
+  border-radius: 15px;
+}
+.savebtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+.selstaffview{
+  display: flex;
+  flex-direction: column;
+
+}
+.deletebtn{
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.deletebtn input{
+  color: red;
+  font-size: 10px;
+}
+.deletebtn button{
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  width: 80px;
+  margin-top: 10px;
+}
+.deletebtn button:hover{
+  color: red;
+  background-color: white;
+  font-weight: bold;
+  border: 1px solid red;
+}
+
+.selstaffview button{
+  width: 80px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  background-color:rgb(108, 226, 104) ;
+  color: white;
+  font: bold;
+  
+
+}
+  
+  @media (max-width: 768px) {
+    .staffcard {
+      flex: 1 1 calc(50% - 32px); /* Adjust to 50% width for smaller screens */
+    }
+    .searchbutton button{
+      margin-top: 10px;
+    }
+    .addstaff ul li span{
+      font-size: 15px;
+      
+    }
+    .addstaff ul li{
+      width: 100px;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .staffcard {
+      flex: 1 1 100%;
+      max-width: 100px; /* Full width for very small screens */
+    }
+    .staffcards{
+      padding-left: 0;
+      width: 80%;
+    }    
+    
+
+    
+  }
+ 

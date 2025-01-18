@@ -1,0 +1,38 @@
+.topsp{
+    display:flex;
+    background-color: #031F42;
+    justify-content: space-between;
+    padding:0px 30px
+}
+.tright img{
+    margin-top: 10px;
+    margin-left: 30px;
+    padding:1px;
+    background-color: white;
+    border-radius: 50px;
+    width: 30px;
+    
+}
+.tleft h4{
+    color: white;
+    font-family: sans-serif;
+
+}
+@media only screen and (max-width: 660px) {
+    .tleft h4{
+        font-size: 8px;
+        
+  }
+  .tright img{
+     width:10px;
+     margin-left: 10px;
+     
+  }
+  .tright{
+    display: flex;
+
+  }
+  .topsp{
+    padding:0px 10px 
+  }
+}
