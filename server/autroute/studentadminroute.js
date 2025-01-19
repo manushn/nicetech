@@ -6,23 +6,30 @@ const UserModel=require("../schemas/loginuserschema")
 
 //Route to get student details
 router.post('/getstudent',async(req , res)=>{
-    if(req.body.distinct){
+    console.log("from getstudent:",req.body);
+    console.log("studentname:",req.body.studentname);
+    console.log("studentid:",req.body.studentid);
+    console.log("distincts",req.body.distinctes);
+    console.log("sortdata",req.body.sortdata);
+
+    if(req.body.distinctes){
         try{
-            const studentdata=await StudentModel.distinct(req.body.distinct);
-            res.status(200).json({studentdata})
+            const studentdata=await StudentModel.distinct(req.body.distinctes);
+           return res.status(200).json({studentdata,cardsuccess:true})
         }catch(error){
-            console.log("error from getstudent",error)
+           return res.status(203).json({message:"Unable to fetch data"})
         }
     };
 
     //------------------------------
 
     try{
-       const StudentData= await StudentModel.find(req.body.studentid,req.body.sortdata||undefined);
-       res.status(200).json({StudentData});
+       const StudentData= await StudentModel.find(req.body.studentid||undefined);
+       return res.status(200).json({StudentData});
     }catch(err){
-        res.status(203).json({message:"Error in geting Student Data"})
         console.log("Error in getting Student details:",err)
+        return res.status(203).json({message:"Error in geting Student Data"});
+        
     };
 });
 

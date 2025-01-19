@@ -2,15 +2,27 @@ import React, { useEffect, useState } from 'react'
 import "./css/managestudents.css"
 import axios from 'axios';
 
+
+
 const backendurl='http://192.168.1.23:3000/';
 
 
 function Managestudents() {
 
   const [Searchbox,setSearchbox]=useState('');
+  const [searchstuname,setsearchstuname]=useState('');
+  const [searchstuid,setsearchstuid]=useState('');
+  const [searchdistinct,setsearchdistinct]=useState('');
+
+
   const [Addstudentbtn,setAddstudentbtn]=useState(false);
+  const [batchselect,setbatchselect]=useState(true);
   const [Departmentselect,setDepartmentselect]=useState(false);
   const [Studentselect,setStudentselect]=useState(false);
+
+  const [userdata,setuserdata]=useState([]);
+  const [carddata,setcarddata]=useState([]);
+  const [sortdatas,setsortdatas]=useState([]);
 
   const [courtesyTitle,setcourtesyTitle]=useState('');
   const [studentname,setstudentname]=useState('');
@@ -73,6 +85,62 @@ function Managestudents() {
       setpcontactnummessage('Number must be 10 digits');
     }
   }, [pcontactnumber]);
+
+  useEffect(()=>{
+    if(Departmentselect){
+      setsearchdistinct("department");
+      setsortdatas('');
+      setsearchstuname('');
+      setsearchstuid('');
+    };
+    if(batchselect){
+      setsearchdistinct("batch");
+      setsortdatas('');
+      setsearchstuname('');
+      setsearchstuid('');
+    };
+    if(Searchbox.length>0){
+
+      setsearchstuname(Searchbox);
+      setsortdatas({studentid:1,courtest_title:1,studentname:1,department:1,batch:1});
+    };
+    if(searchstuid.length>0){
+      setsortdatas('');
+    };
+    
+  },[Departmentselect, batchselect,searchdistinct])
+
+
+  useEffect(() => {
+
+    const fetchdata = async () => {
+      if(!searchdistinct){
+        return
+      }
+      try {
+        const token = sessionStorage.getItem('token');
+        console.log( "Console log from getstudent",searchstuid,searchstuname,searchdistinct,sortdatas)
+        const response = await axios.post(
+          `${backendurl}admin/getstudent`,
+          {studentid:searchstuid,studentname:searchstuname,distinctes:searchdistinct,sortdata:sortdatas},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+        if(response.cardsuccess){
+          setcarddata(response.cardsuccess);
+        }
+
+        
+      } catch (error) {
+        console.log("Unable to fetch student data");
+      }
+    };
+    fetchdata();
+  }, [Departmentselect, batchselect,searchdistinct]);
 
   
 
@@ -172,6 +240,8 @@ function Managestudents() {
     {value:'Active',label:'Active'},
     {value:'Non Active',label:'Non Active'}
   ]
+if(batchselect)
+
 
 
   return (
@@ -389,9 +459,17 @@ function Managestudents() {
               </div>
           </div>
          ):(
-          <div className="stubatchcon">
-              <h1>Student detail</h1>
-          </div>
+          <>
+          {Departmentselect ?(
+            <div className="studepcon">
+
+            </div>
+          ):(
+            <div className="stubatchcon">
+              
+            </div>
+          )}
+          </>
          )}
       </div>
     </div>
