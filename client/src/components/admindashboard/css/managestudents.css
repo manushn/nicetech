@@ -27,6 +27,7 @@
     border-radius: 20px;
     color: white;
     margin-top: 8px;
+    cursor:pointer;
 }
 
 .topleft input{
@@ -104,6 +105,105 @@
     font-weight: bold;
     margin-top: 40px;
 }
+
+.stubatchpcon{
+    display:flex;
+    flex-direction: column;
+    
+}
+
+.batchcards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    
+    
+}
+.batchcard{
+    padding:30px 70px;
+    width: 180px;
+    border: 1px black solid;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    border: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bold;
+    color: white;
+    box-shadow: 1px 1px 1px grey;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #00C9FF 0%, #92FE9D 100%);
+    cursor: pointer;
+    
+}
+.batchcard h3{
+    color: black;
+}
+.batchcard:hover{
+    margin-top: 10px;
+    box-shadow: 4px 4px 4px grey;
+}
+.depcards{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.depcard{
+    background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+    width: 350px;
+    text-align: center;
+    margin-top: 40px;
+    padding: 40px 40px;
+    border-radius: 20px;
+    border: none;
+    box-shadow: 8px 8px 10px grey;
+
+    
+}
+.depcard:hover{
+    box-shadow: 15px 15px 10px grey;
+    margin-top: 20px;
+}
+
+.depcard h3{
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    font-family:sans-serif;
+    
+}
+
+.studentscard{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    
+}
+.studentcard{
+    display: flex;
+    justify-content: space-between;
+    width: 320px;
+    background-color: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-right: 10px;
+    cursor: pointer;
+    box-shadow: 2px 2px 2px gray;
+    margin-top: 10px;
+    
+}
+.studentcard:hover{
+    box-shadow: 5px 5px 5px gray;
+    margin-top: 2px;
+}
+.studentphotos img {
+    width: 100px;
+}
+
 
 
 

@@ -15,16 +15,18 @@ router.post('/getstudent',async(req , res)=>{
     if(req.body.distinctes){
         try{
             const studentdata=await StudentModel.distinct(req.body.distinctes);
-           return res.status(200).json({studentdata,cardsuccess:true})
+           return res.status(200).json({studentdata,success:true})
         }catch(error){
            return res.status(203).json({message:"Unable to fetch data"})
         }
     };
 
-    //------------------------------
+   
+
+    //-----------------------------------------------------------------
 
     try{
-       const StudentData= await StudentModel.find(req.body.studentid||undefined);
+       const StudentData= await StudentModel.find(req.body.searchfilter||undefined,{studentid:1,courtest_title:1,studentname:1,regnumber:1,department:1,batch:1});
        return res.status(200).json({StudentData});
     }catch(err){
         console.log("Error in getting Student details:",err)
@@ -74,6 +76,7 @@ try{
         studentid:stuID,
         courtest_title,
         studentname,
+        regnumber,
         gender,
         dob,
         department,

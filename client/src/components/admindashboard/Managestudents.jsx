@@ -13,14 +13,18 @@ function Managestudents() {
   const [searchstuname,setsearchstuname]=useState('');
   const [searchstuid,setsearchstuid]=useState('');
   const [searchdistinct,setsearchdistinct]=useState('');
+  const [errormessage,seterrormessage]=useState('');
+
+  const [currentbatch,setcurrentbatch]=useState('');
+  const [currentdepartment,setcurrentdepartment]=useState('');
 
 
   const [Addstudentbtn,setAddstudentbtn]=useState(false);
   const [batchselect,setbatchselect]=useState(true);
   const [Departmentselect,setDepartmentselect]=useState(false);
-  const [Studentselect,setStudentselect]=useState(false);
+  const [Studentsselect,setStudentsselect]=useState(false);
 
-  const [userdata,setuserdata]=useState([]);
+  const [studentsdata,setstudentsdata]=useState([]);
   const [carddata,setcarddata]=useState([]);
   const [sortdatas,setsortdatas]=useState([]);
 
@@ -45,7 +49,7 @@ function Managestudents() {
   const [batchmessage,setbatchmessage]=useState('');
   const [contactnumessage,setcontactnummessage]=useState('');
   const [pcontactnumessage,setpcontactnummessage]=useState('');
-
+//.............................................................................
   //Use effect to verify batch 
 
   useEffect(()=>{
@@ -55,7 +59,9 @@ function Managestudents() {
       console.log("UseEffect run")
     }
   },[batch]);
+//.............................................................................
 
+  // To Validate Phone Number
   useEffect(() => {
     if (contactnumber.length === 0 || contactnumber.length === 10) {
       setcontactnummessage('');
@@ -69,9 +75,6 @@ function Managestudents() {
     if (contactnumber.length < 10 && contactnumber.length > 0) {
       setcontactnummessage('Number must be 10 digits');
     }
-  }, [contactnumber]);
-
-  useEffect(() => {
     if (pcontactnumber.length === 0 || pcontactnumber.length === 10) {
       setpcontactnummessage('');
     }
@@ -84,45 +87,54 @@ function Managestudents() {
     if (pcontactnumber.length < 10 && pcontactnumber.length > 0) {
       setpcontactnummessage('Number must be 10 digits');
     }
-  }, [pcontactnumber]);
+  }, [contactnumber,pcontactnumber]);
+//.............................................................................
 
+//UseEffect to Set values 
   useEffect(()=>{
     if(Departmentselect){
       setsearchdistinct("department");
       setsortdatas('');
       setsearchstuname('');
       setsearchstuid('');
+      console.log("Department set");
     };
     if(batchselect){
       setsearchdistinct("batch");
       setsortdatas('');
       setsearchstuname('');
       setsearchstuid('');
+      console.log("batch set");
     };
     if(Searchbox.length>0){
 
       setsearchstuname(Searchbox);
       setsortdatas({studentid:1,courtest_title:1,studentname:1,department:1,batch:1});
     };
+    if(Studentsselect){
+      setsortdatas({studentid:1,courtest_title:1,studentname:1,department:1,batch:1});
+      setsearchdistinct('');
+      setsearchstuname('');
+      setsearchstuid('');
+    }
     if(searchstuid.length>0){
       setsortdatas('');
     };
     
-  },[Departmentselect, batchselect,searchdistinct])
+  },[Departmentselect, batchselect,searchdistinct,Studentsselect])
+//.............................................................................
 
-
+// to fetch student data
   useEffect(() => {
 
     const fetchdata = async () => {
-      if(!searchdistinct){
-        return
-      }
+       seterrormessage('');
       try {
         const token = sessionStorage.getItem('token');
         console.log( "Console log from getstudent",searchstuid,searchstuname,searchdistinct,sortdatas)
         const response = await axios.post(
           `${backendurl}admin/getstudent`,
-          {studentid:searchstuid,studentname:searchstuname,distinctes:searchdistinct,sortdata:sortdatas},
+          {studentid:searchstuid,studentname:searchstuname,distinctes:searchdistinct,searchfilter:{batch:currentbatch,department:currentdepartment}},
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -130,9 +142,18 @@ function Managestudents() {
             },
           }
         );
-        if(response.cardsuccess){
-          setcarddata(response.cardsuccess);
-        }
+        if(response.data.success){ 
+          setcarddata(response.data.studentdata);
+          
+        };
+        if(response.data.StudentData.length<1){
+          seterrormessage("No Student Found!")
+        };
+        if(response.data.StudentData){
+          setstudentsdata(response.data.StudentData)
+        };
+
+        
 
         
       } catch (error) {
@@ -140,11 +161,16 @@ function Managestudents() {
       }
     };
     fetchdata();
-  }, [Departmentselect, batchselect,searchdistinct]);
+    
+  }, [Departmentselect, batchselect,searchdistinct,Studentsselect]);
 
-  
+  //.............................................................................
+  useEffect(() => {
+    console.log('Batch data', carddata);
+    console.log("student data:",studentsdata);
+  }, [carddata,studentsdata]);
 
-
+//.............................................................................
   const handeladdstudent= async()=>{
     alert("addbutton clicked")
    try{
@@ -192,7 +218,7 @@ function Managestudents() {
     alert(error)
    } 
   }
-
+//.............................................................................
   const courtesy_titlename=[
     { value: '', label: 'Courtesy_title' },
     { value: 'Mr', label: 'Mr' },
@@ -240,8 +266,27 @@ function Managestudents() {
     {value:'Active',label:'Active'},
     {value:'Non Active',label:'Non Active'}
   ]
-if(batchselect)
-
+//.............................................................................
+//To control Back Button
+const backbutton = async()=>{
+  if(Departmentselect){
+    setbatchselect(true);
+    setDepartmentselect(false);
+    setcurrentbatch('');
+  };
+  if(Addstudentbtn){
+    setAddstudentbtn(false);
+    setbatchselect(true);
+  };
+  if(Studentsselect){
+    setDepartmentselect(false);
+    setStudentsselect(false);
+    setbatchselect(true);
+  };
+  if(!Departmentselect && !batchselect&& !Studentsselect && !Addstudentbtn){
+    setDepartmentselect(true)
+  }
+}
 
 
   return (
@@ -258,13 +303,7 @@ if(batchselect)
 
             <button>Search</button>
 
-            <button onClick={()=>{
-              setSearchbox('');
-              setAddstudentbtn('');
-              setDepartmentselect('');
-              setStudentselect('');
-            
-            }}>Back</button>
+            <button onClick={backbutton}>Back</button>
             
             </div>
             
@@ -460,15 +499,91 @@ if(batchselect)
           </div>
          ):(
           <>
-          {Departmentselect ?(
-            <div className="studepcon">
-
+          {batchselect ?(
+            <div className="stubatchpcon">
+              <h2>Batches</h2>
+              <div className="batchcards" >
+                {carddata.map((year,index)=>(
+                  <div className="batchcard" key={index} onClick={()=>{
+                    setbatchselect(false);
+                    setDepartmentselect(true);
+                    setcurrentbatch(year);
+                    
+                  }}>
+                      <h2>BATCH</h2><h3>{year}</h3>
+                  </div>
+                ))}
+              </div>
             </div>
           ):(
-            <div className="stubatchcon">
+            <div className="student-batch-false">
+              {Departmentselect ?(
+                <div className="department-main">
+                  <h2>Departments</h2>
+                  <div className="depcards">
+                
+                     {carddata.map((departments,index)=>(
+                      <div className="depcard" key={index} onClick={()=>{
+                        setDepartmentselect(false);
+                        setcurrentdepartment(departments);
+                        setsearchdistinct('');
+                      }} >
+                          <h3>{departments}</h3>
+                      </div>
+                      ))}
+              </div>
+                </div>
+              ):(
+                <>
+                {Studentsselect?(
+                  <>
+                    
+                  </>
+                ):(
+                  <div className="department-false">
+                  <div className="selectstudents">
+                      <h2>Students</h2>
+                    <div className="studentscards">
+                        {studentsdata.length > 0 ? (
+                           <div className="studentscard">
+                               {studentsdata.map((user) => (
+                               <div 
+                                 key={user.studentid}
+                                 className="studentcard"
+                                 onClick={() => {
+                                 setsearchstuid(user.studentid);
+                        
+                                }}>
+                                   <div className="studentcardcon">
+                                        <h5>{user.courtest_title} . {user.studentname}</h5>
+                                        <p>Student ID: {user.studentid}</p>
+                                        <p>Reg Number:{user.regnumber}</p>
+                                        <p>Department: {user.department}</p>
+                                        <p>Batch: {user.batch}</p>
+                                   </div>
+
+                                  <div className="studentphotos">
+                                      <img src="profileholder.png" alt="Profile" />
+                                  </div>
+                               </div>
+                                 ))}
+                            </div>
+                        ) : (
+                           <p>No User found</p>
+                           )}
+
+                     </div>
+                     </div>
+                  </div>
+                )}
+                
+                </>
+
+              )}
               
-            </div>
+              </div>
           )}
+          
           </>
          )}
       </div>
