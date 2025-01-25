@@ -13,23 +13,27 @@ function Managestudents() {
   const [searchstuname,setsearchstuname]=useState('');
   const [searchstuid,setsearchstuid]=useState('');
   const [searchdistinct,setsearchdistinct]=useState('');
-  const [errormessage,seterrormessage]=useState('');
+  
 
   const [currentbatch,setcurrentbatch]=useState('');
   const [currentdepartment,setcurrentdepartment]=useState('');
+  const [deleteverifys,setdeleteverifys]=useState('');
 
 
   const [Addstudentbtn,setAddstudentbtn]=useState(false);
   const [batchselect,setbatchselect]=useState(true);
   const [Departmentselect,setDepartmentselect]=useState(false);
   const [Studentsselect,setStudentsselect]=useState(false);
+  const [studenteditbtn,setstudenteditbtn]=useState(false);
 
   const [studentsdata,setstudentsdata]=useState([]);
   const [carddata,setcarddata]=useState([]);
   const [sortdatas,setsortdatas]=useState([]);
 
+  const [studentid,setstudentid]=useState('');
   const [courtesyTitle,setcourtesyTitle]=useState('');
   const [studentname,setstudentname]=useState('');
+  const [regnumber,setregnumber]=useState('');
   const [gender,setgender]=useState('');
   const [dob,setdob]=useState('');
   const [department,setdepartment]=useState('');
@@ -61,6 +65,8 @@ function Managestudents() {
   },[batch]);
 //.............................................................................
 
+
+ 
   // To Validate Phone Number
   useEffect(() => {
     if (contactnumber.length === 0 || contactnumber.length === 10) {
@@ -93,6 +99,7 @@ function Managestudents() {
 //UseEffect to Set values 
   useEffect(()=>{
     if(Departmentselect){
+      setcarddata([]);
       setsearchdistinct("department");
       setsortdatas('');
       setsearchstuname('');
@@ -100,6 +107,7 @@ function Managestudents() {
       console.log("Department set");
     };
     if(batchselect){
+      setcarddata([]);
       setsearchdistinct("batch");
       setsortdatas('');
       setsearchstuname('');
@@ -114,12 +122,34 @@ function Managestudents() {
     if(Studentsselect){
       setsortdatas({studentid:1,courtest_title:1,studentname:1,department:1,batch:1});
       setsearchdistinct('');
+      
       setsearchstuname('');
       setsearchstuid('');
     }
     if(searchstuid.length>0){
       setsortdatas('');
     };
+    if(Addstudentbtn){
+           setstudentid('');
+           setcourtesyTitle('');
+           setstudentname('');
+           setregnumber('');
+           setgender('');
+           setdob('');
+           setdepartment('');
+           setbatch('');
+           setcontactnumber('');
+           setemail('');
+           setplace('');
+           setaddress('');
+           setparentname('');
+           setpcontactnumber('');
+           setstudymode('');
+           setstaymode('');
+           settravelmode('');
+           setstatus('');
+           setadmiteddate('');
+    }
     
   },[Departmentselect, batchselect,searchdistinct,Studentsselect])
 //.............................................................................
@@ -128,7 +158,7 @@ function Managestudents() {
   useEffect(() => {
 
     const fetchdata = async () => {
-       seterrormessage('');
+      setcarddata([]);
       try {
         const token = sessionStorage.getItem('token');
         console.log( "Console log from getstudent",searchstuid,searchstuname,searchdistinct,sortdatas)
@@ -142,16 +172,41 @@ function Managestudents() {
             },
           }
         );
+        sessionStorage.setItem('token', response.data.token);
+        console.log(response.data);
         if(response.data.success){ 
           setcarddata(response.data.studentdata);
           
         };
-        if(response.data.StudentData.length<1){
-          seterrormessage("No Student Found!")
-        };
+        
         if(response.data.StudentData){
-          setstudentsdata(response.data.StudentData)
+          setstudentsdata(response.data.StudentData);
         };
+
+        if (response.data.selectstudentdata && response.data.selectstudentdata.length > 0) {
+          console.log("Student Data Found:", response.data.selectstudentdata);
+          const studentdata = response.data.selectstudentdata[0];
+           
+          setstudentid(studentdata.studentid || "");
+          setcourtesyTitle(studentdata.courtest_title || "");
+          setstudentname(studentdata.studentname || "");
+          setregnumber(studentdata.regnumber || "");
+          setgender(studentdata.gender || "");
+          setdob(studentdata.dob || "");
+          setdepartment(studentdata.department || "");
+          setbatch(studentdata.batch || "");
+          setcontactnumber(studentdata.contactnumber || "");
+          setemail(studentdata.email || "");
+          setplace(studentdata.place || "");
+          setaddress(studentdata.address || "");
+          setparentname(studentdata.parentname || "");
+          setpcontactnumber(studentdata.pcontactnumber || "");
+          setstudymode(studentdata.studymode || "");
+          setstaymode(studentdata.staymode || "");
+          settravelmode(studentdata.travelmode || "");
+          setstatus(studentdata.status || "");
+          setadmiteddate(studentdata.admiteddate || "");
+        } 
 
         
 
@@ -162,9 +217,66 @@ function Managestudents() {
     };
     fetchdata();
     
-  }, [Departmentselect, batchselect,searchdistinct,Studentsselect]);
+  }, [searchdistinct,Studentsselect]);
 
   //.............................................................................
+
+  const updatestudent=async()=>{
+    try{
+      const token = sessionStorage.getItem('token');
+
+      const newstudent={
+        studentid,
+        courtest_title:courtesyTitle,
+        studentname,
+        regnumber,
+        gender,
+        dob,
+        department,
+        batch,
+        contactnumber,
+        email, 
+        place,
+        address,
+        parentname,
+        pcontactnumber,
+        studymode,
+        staymode,
+        travelmode,
+        status,
+        admiteddate
+      };
+
+      const response = await axios.put(
+        `${backendurl}admin/studentupdate`,
+        newstudent,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+      console.log("response for add send")
+      sessionStorage.setItem('token', response.data.token);
+      if (response.data.success){
+        alert("Student Updated")
+        setstudenteditbtn(false);
+        setDepartmentselect(false);
+        setStudentsselect(true);
+        setbatchselect(false);
+      }
+
+      if (response.data.message){
+        alert(response.data.message)
+      }
+      console.log("Received response")
+ }catch(error){
+  alert(error)
+ } 
+  }
+
+ //.............................................................................
+
   useEffect(() => {
     console.log('Batch data', carddata);
     console.log("student data:",studentsdata);
@@ -172,13 +284,14 @@ function Managestudents() {
 
 //.............................................................................
   const handeladdstudent= async()=>{
-    alert("addbutton clicked")
+    
    try{
         const token = sessionStorage.getItem('token');
 
         const newstudent={
           courtest_title:courtesyTitle,
           studentname,
+          regnumber,
           gender,
           dob,
           department,
@@ -206,12 +319,36 @@ function Managestudents() {
             },
           });
         console.log("response for add send")
-        if (response.data.success){
-          alert("Student Updated")
-        }
-
+  
         if (response.data.message){
           alert(response.data.message)
+        }
+
+        if (response.data.success){
+           setstudentid('');
+           setcourtesyTitle('');
+           setstudentname('');
+           setregnumber('');
+           setgender('');
+           setdob('');
+           setdepartment('');
+           setbatch('');
+           setcontactnumber('');
+           setemail('');
+           setplace('');
+           setaddress('');
+           setparentname('');
+           setpcontactnumber('');
+           setstudymode('');
+           setstaymode('');
+           settravelmode('');
+           setstatus('');
+           setadmiteddate('');
+           setstudenteditbtn(false);
+           setStudentsselect(false);
+           setAddstudentbtn(false);
+           setbatchselect(true);
+           
         }
         console.log("Received response")
    }catch(error){
@@ -219,6 +356,45 @@ function Managestudents() {
    } 
   }
 //.............................................................................
+
+//To Delete Student
+
+const deletestudent=async()=>{
+  if (deleteverifys === 'DELETE STUDENT') {
+    try {
+
+      const token = sessionStorage.getItem('token');
+      const response = await axios.delete(`${backendurl}admin/studentdelete`, {
+        data: { studentid: studentid },
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      });
+      setdeleteverifys('');
+
+      if (response.data.loginstatus==='false'){
+        alert("Ivalid Token Loging Out....");
+        sessionStorage.removeItem('isLoggedin');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem("token");
+        navigate('/');
+      }
+
+      sessionStorage.setItem('token', response.data.token);
+      if (response.data.success){
+        setStudentsselect(false);
+        setDepartmentselect(false);
+        setbatchselect(false);
+        setstudenteditbtn(false);
+      };
+      alert(response.data.message);
+
+      
+    } catch (error) {
+      console.error('Error deleting staff:', error.message);
+    }
+  }else{
+    alert("Enter:'DELETE STUDENT' in the box")
+  }
+}
   const courtesy_titlename=[
     { value: '', label: 'Courtesy_title' },
     { value: 'Mr', label: 'Mr' },
@@ -267,12 +443,16 @@ function Managestudents() {
     {value:'Non Active',label:'Non Active'}
   ]
 //.............................................................................
+
+
+
 //To control Back Button
 const backbutton = async()=>{
   if(Departmentselect){
     setbatchselect(true);
     setDepartmentselect(false);
     setcurrentbatch('');
+    
   };
   if(Addstudentbtn){
     setAddstudentbtn(false);
@@ -281,12 +461,27 @@ const backbutton = async()=>{
   if(Studentsselect){
     setDepartmentselect(false);
     setStudentsselect(false);
-    setbatchselect(true);
+    setbatchselect(false);
+    
+    
   };
   if(!Departmentselect && !batchselect&& !Studentsselect && !Addstudentbtn){
-    setDepartmentselect(true)
-  }
+    setDepartmentselect(true);
+    
+  };
+  if(studenteditbtn){
+    setstudenteditbtn(false);
+    setDepartmentselect(false);
+    setStudentsselect(true);
+    setbatchselect(false);
+  };
+  
+  
 }
+
+
+
+//-------------------------------------------------
 
 
   return (
@@ -311,7 +506,27 @@ const backbutton = async()=>{
 
           <div className="topright">
           <ul>
-              <li onClick={() => {setAddstudentbtn(true);
+              <li onClick={() => {
+                setstudentid('');
+                setcourtesyTitle('');
+                setstudentname('');
+                setregnumber('');
+                setgender('');
+                setdob('');
+                setdepartment('');
+                setbatch('');
+                setcontactnumber('');
+                setemail('');
+                setplace('');
+                setaddress('');
+                setparentname('');
+                setpcontactnumber('');
+                setstudymode('');
+                setstaymode('');
+                settravelmode('');
+                setstatus('');
+                setadmiteddate('');
+                setAddstudentbtn(true);
                 }}>
               <span>Add Student</span>
               <img src="adminimg/addstaff.png" alt="Add Staff" width="30px" />
@@ -346,6 +561,13 @@ const backbutton = async()=>{
                 onChange={(e)=>setstudentname(e.target.value.toUpperCase())}
                 />
 
+                <label>Register Number</label>
+                <input
+                type='tel'
+                placeholder='AU Reg Number'
+                value={regnumber}
+                onChange={(e)=>setregnumber(e.target.value)}
+                />
                 <label>Gender</label>
                 <select
                 value={gender}
@@ -381,7 +603,7 @@ const backbutton = async()=>{
 
               <label>Batch</label>
               <input
-                type="number"
+                type="tel"
                 placeholder="2023"
                 value={batch}
                 onChange={(e) =>{ 
@@ -393,7 +615,7 @@ const backbutton = async()=>{
 
               <label>Contact Number</label>
               <input
-              type='number'
+              type="tel"
               value={contactnumber}
               placeholder='Contact Number'
               onChange={(e)=>setcontactnumber(e.target.value)}
@@ -428,6 +650,7 @@ const backbutton = async()=>{
 
               <label>Parent Contact Number</label>
               <input
+              type='tel'
               value={pcontactnumber}
               onChange={(e)=>setpcontactnumber(e.target.value)}
               />
@@ -503,16 +726,25 @@ const backbutton = async()=>{
             <div className="stubatchpcon">
               <h2>Batches</h2>
               <div className="batchcards" >
-                {carddata.map((year,index)=>(
-                  <div className="batchcard" key={index} onClick={()=>{
-                    setbatchselect(false);
-                    setDepartmentselect(true);
-                    setcurrentbatch(year);
-                    
-                  }}>
-                      <h2>BATCH</h2><h3>{year}</h3>
-                  </div>
-                ))}
+                {carddata.length>0 ?(
+                  <>
+                  {carddata.map((year,index)=>(
+                    <div className="batchcard" key={index} onClick={()=>{
+                      setbatchselect(false);
+                      setDepartmentselect(true);
+                      setcurrentbatch(year);
+                      
+                    }}>
+                        <h2>BATCH</h2><h3>{year}</h3>
+                    </div>
+                  ))}
+                  </>
+                ):(
+                  <>
+                  <p>No Batchs Available</p>
+                  </>
+                )}
+                
               </div>
             </div>
           ):(
@@ -521,23 +753,255 @@ const backbutton = async()=>{
                 <div className="department-main">
                   <h2>Departments</h2>
                   <div className="depcards">
-                
-                     {carddata.map((departments,index)=>(
+                     {carddata.length>0 ?(
+                      <>
+                      {carddata.map((departments,index)=>(
                       <div className="depcard" key={index} onClick={()=>{
                         setDepartmentselect(false);
                         setcurrentdepartment(departments);
                         setsearchdistinct('');
+
                       }} >
                           <h3>{departments}</h3>
                       </div>
                       ))}
+                      </>
+                     ):(
+                      <>
+                      <p>Card Data Not Available</p>
+                      </>
+                     )}
+                     
               </div>
                 </div>
               ):(
                 <>
                 {Studentsselect?(
                   <>
-                    
+                    <div className="studentdetails">
+                      {studenteditbtn?(
+                        <div className="studenteditok">
+                            <div className="studetailcon">
+              <div className="studentconsub">
+                <label>Mr/Miss/Mrs</label>
+                <select
+                value={courtesyTitle}
+                onChange={(e) => setcourtesyTitle(e.target.value)}
+                required
+                >
+                  {courtesy_titlename.map((optionS) => (
+                    <option key={optionS.value} value={optionS.value}>
+                     {optionS.label}
+                    </option>
+                  ))}
+                </select>
+
+                <label>Student Name</label>
+                <input
+                value={studentname}
+                placeholder='student Name'
+                onChange={(e)=>setstudentname(e.target.value.toUpperCase())}
+                />
+
+                <label>Register Number</label>
+                <input
+                type='tel'
+                placeholder='AU Reg Number'
+                value={regnumber}
+                onChange={(e)=>setregnumber(e.target.value)}
+                />
+                <label>Gender</label>
+                <select
+                value={gender}
+                onChange={(e) => setgender(e.target.value)}
+                required
+                >
+                  {genderselect.map((optionS) => (
+                    <option key={optionS.value} value={optionS.value}>
+                       {optionS.label}
+                    </option>
+                  ))}
+               </select>
+
+               <label>DOB</label>
+               <input
+               value={dob}
+               type='date'
+               onChange={(e)=>setdob(e.target.value)}
+               />
+
+               <label>Department</label>
+               <select
+                value={department}
+                onChange={(e) => setdepartment(e.target.value)}
+                required
+               >
+                  {departmentOptions.map((optionS) => (
+                    <option key={optionS.value} value={optionS.value}>
+                      {optionS.label}
+                    </option>
+                  ))}
+              </select>
+
+              <label>Batch</label>
+              <input
+                type="tel"
+                placeholder="2023"
+                value={batch}
+                onChange={(e) =>{ 
+                  setbatch(e.target.value);
+                  setbatchmessage('');
+                }}
+              />
+              <p>{batchmessage}</p>
+
+              <label>Contact Number</label>
+              <input
+              type='tel'
+              value={contactnumber}
+              placeholder='Contact Number'
+              onChange={(e)=>setcontactnumber(e.target.value)}
+              />
+              <p>{contactnumessage}</p>
+
+              <label>Email</label>
+              <input
+              value={email}
+              onChange={(e)=>setemail(e.target.value.toLowerCase())}
+              placeholder='example@gmail.com'
+              />
+
+              <label>Place</label>
+              <input
+              value={place}
+              onChange={(e)=>setplace(e.target.value.toUpperCase())}
+              />
+
+              <label>Address</label>
+              <input
+              value={address}
+              onChange={(e)=>setaddress(e.target.value.toUpperCase())}
+              />
+
+              <label>Parent Name</label>
+              <input
+              value={parentname}
+              onChange={(e)=>setparentname(e.target.value.toUpperCase())}
+              />
+              
+
+              <label>Parent Contact Number</label>
+              <input
+              type='tel'
+              value={pcontactnumber}
+              onChange={(e)=>setpcontactnumber(e.target.value)}
+              />
+              <p>{pcontactnumessage}</p>
+
+              <label>Study Mode</label>
+              <select
+                value={studymode}
+                onChange={(e) => setstudymode(e.target.value)}
+                required
+               >
+                  {studymodeselect.map((optionS) => (
+                    <option key={optionS.value} value={optionS.value}>
+                      {optionS.label}
+                    </option>
+                  ))}
+               </select>
+
+               <label>Study Mode</label>
+              <select
+                value={staymode}
+                onChange={(e) => setstaymode(e.target.value)}
+                required
+               >
+                  {staymodeselect.map((optionS) => (
+                    <option key={optionS.value} value={optionS.value}>
+                      {optionS.label}
+                    </option>
+                  ))}
+               </select>
+
+               <label>Travel Mode</label>
+               <select
+               value={travelmode}
+               onChange={(e)=> settravelmode(e.target.value)}
+               >
+                 {travelmodeselect.map((optionS)=>(
+                  <option key={optionS.value} value={optionS.value}>
+                      {optionS.label}
+                  </option>
+                 ))}
+               </select>
+
+              <label>Status</label>
+              <select
+               value={status}
+               onChange={(e)=> setstatus(e.target.value)}
+               >
+                 {statusselect.map((optionS)=>(
+                  <option key={optionS.value} value={optionS.value}>
+                      {optionS.label}
+                  </option>
+                 ))}
+               </select>
+
+               <label>Date Of Admition</label>
+               <input
+               value={admiteddate}
+               type='date'
+               onChange={(e)=>setadmiteddate(e.target.value)}
+               />
+
+               <div className="addstubtn">
+                <button onClick={updatestudent}>Update Student</button>
+               </div>
+
+               </div>
+              </div>
+                        </div>
+                      ):(
+                        <div className="studenteditno">
+                          <h2>Selected Student</h2>
+                          <div className="studenteditnocon">
+                            <p>Student Name : {studentname}</p>
+                            <p>Student Id : {studentid}</p>
+                            <p>Register Number: {regnumber}</p>
+                            <p>Gender: {gender}</p>
+                            <p>DOB: {dob}</p>
+                            <p>Department: {department}</p>
+                            <p>Batch: {batch}</p>
+                            <p>Contact Number: {contactnumber}</p>
+                            <p>Email: {email}</p>
+                            <p>Place: {place}</p>
+                            <p>Address: {address}</p>
+                            <p>Parent Name: {parentname}</p>
+                            <p>Parent Contact Number: {pcontactnumber}</p>
+                            <p>Study Mode: {studymode}</p>
+                            <p>Stay Mode: {staymode}</p>
+                            <p>Travel Mode: {travelmode}</p>
+                            <p>AdmitedDate: {admiteddate}</p>
+                            <p>Status:{status}</p>
+                            <button onClick={()=>{
+                              setstudenteditbtn(true);
+                            }}>Edit</button>
+
+                            <div className="deletestu">
+                            <input
+                            placeholder='DELETE STUDENT'
+                            value={deleteverifys}
+                            onChange={(e)=>{setdeleteverifys(e.target.value)}}
+                            />
+                            <button onClick={ deletestudent}>Delete</button>
+                            </div>
+                            
+                          </div>
+
+                        </div>
+                      )}
+                    </div>
                   </>
                 ):(
                   <div className="department-false">
@@ -551,11 +1015,15 @@ const backbutton = async()=>{
                                  key={user.studentid}
                                  className="studentcard"
                                  onClick={() => {
+
                                  setsearchstuid(user.studentid);
-                        
+                                 setStudentsselect(true);
+                                 setDepartmentselect(false);
+                                 
+                                 
                                 }}>
                                    <div className="studentcardcon">
-                                        <h5>{user.courtest_title} . {user.studentname}</h5>
+                                        <h5>{user.courtest_title}  . {user.studentname}</h5>
                                         <p>Student ID: {user.studentid}</p>
                                         <p>Reg Number:{user.regnumber}</p>
                                         <p>Department: {user.department}</p>

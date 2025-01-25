@@ -10,7 +10,7 @@ const Verifytoken = (req, res, next) => {
     req.body.token ||                           // Use `token` instead of `tokens` for consistency
     req.query.token;
 
-  console.log("Token received for verification:", token);
+  
 
   // Check if the token exists
   if (!token) {
