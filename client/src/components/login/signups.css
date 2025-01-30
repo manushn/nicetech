@@ -24,6 +24,12 @@
     font-size: 19px;
 
 }
+.signupmain input{
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid black;
+}
 .signupmain p{
     font-size: 15px;
     color: red;
@@ -101,4 +107,15 @@
 .messagep p{
     color: red;
     text-align: center;
+}
+.recapchas{
+    display: flex;
+   
+    justify-content: center;
+    align-items: center;
+}
+.recapchabtn{
+    transform: scale(0.7); /* Adjust scale (0.85 = 85% size) */
+  
+   
 }

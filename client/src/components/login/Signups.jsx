@@ -3,6 +3,7 @@ import Tops from '../top/Tops';
 import "./signups.css";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Signups() {
   const navigate = useNavigate();
@@ -18,7 +19,34 @@ function Signups() {
   const [resendOtpDisabled, setResendOtpDisabled] = useState(true);
   const [Message, setMessage] = useState('');
   const [timer, setTimer] = useState(60);
-  const [createbtn,setcreatebtn]=useState(false);
+  const [createbtn,setcreatebtn]=useState(true);
+
+  const [captchaValue, setCaptchaValue] = useState('');
+  const [captchatrue, setcaptchatrue] = useState(true);
+  
+  useEffect(() => {
+    if (!captchaValue) return; // Prevent unnecessary API calls
+
+    const verifycaptcha = async () => {
+      try {
+        const response = await axios.post('http://192.168.1.23:3000/verifycaptcha', {
+          captchaValue,
+        });
+
+        if (response.data.success) {
+          setcaptchatrue(false);
+        } else {
+          setcaptchatrue(true);
+        }
+      } catch (error) {
+        console.error("Error in verifying captcha", error);
+        setcaptchatrue(true);
+      }
+    };
+
+    verifycaptcha();
+  }, [captchaValue]);
+
 
   const handleSignup = async (e) => {
     console.log("create button pressed")
@@ -195,6 +223,14 @@ function Signups() {
               }}
             />
             <p>{repassMessage}</p>
+            <div className="recapchas">
+            <div className="recapchabtn">
+            <ReCAPTCHA
+              sitekey="6Lcv0MYqAAAAAAuNn4nWlwuEXJgnw5rY64Uqw01x" // Replace with your actual site key
+              onChange={(value) => setCaptchaValue(value)}
+            />
+            </div>
+            </div>
 
             <button onClick={handleSignup} disabled={createbtn}>Create</button>
 

@@ -23,13 +23,13 @@ async function sendOtp(email, name,username) {
     let transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: 'manushstudy@gmail.com',
-            pass: 'bojp kxia vbji zocj', // Use environment variables for security
+            user: 'nicetonline@gmail.com',
+            pass: 'ghtc wkmn bubx eoyu', // Use environment variables for security
         },
     });
 
     let mailOptions = {
-        from: 'manushstudy@gmail.com',
+        from: 'nicetonline@gmail.com',
         to: email,
         subject: `Hi ${name}, Verification OTP Fom NICETECH`,
         text: `Your OTP code is ${otp} to create your password. Don't Share your OTP and PASSWORDS with anyone.`,
@@ -49,8 +49,7 @@ async function sendOtp(email, name,username) {
 // Route to handle user signup
 router.post('/signups', async (req, res) => {
     const { username, password } = req.body;
-    console.log("From Signups:",username ,password);
-
+    
     if (!username || !password) {
         return res.status(203).json({ message: "All fields are required" });
     }

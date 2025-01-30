@@ -44,7 +44,7 @@ router.post("/staffadd", Verifytoken, async (req, res) => {
 
         try {
             const newStaffId = await findGreatestStaffId();
-            s
+            
 
             const newStaff = new StaffModel({
                 staffid: newStaffId,

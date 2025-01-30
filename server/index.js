@@ -9,6 +9,7 @@ const Loginroute= require('./autroute/login.js');
 const Staffadd=require("./autroute/adminroute.js");
 const PasswordCreater=require("./autroute/createpassword.js");
 const Studentmanage=require("./autroute/studentadminroute.js");
+const Recaptcha=require("./Recapcha.js");
 
 const uri = "mongodb+srv://manush12:Manushnicetech1@manush-database.scvtt.mongodb.net/?retryWrites=true&w=majority&appName=manush-database";
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
   });
 app.use('/',Loginroute);
 app.use('/',PasswordCreater);
+app.use('/',Recaptcha);
 app.use('/admin',Staffadd);
 app.use('/admin',Studentmanage);
 

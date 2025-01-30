@@ -249,7 +249,12 @@ input::-webkit-outer-spin-button,
     background-color: white;
     font-weight: bold;
 }
-
+.deletestu input{
+    color:red;
+}
+.recapchabtn ReCAPTCHA{
+    width:10px;
+}
 
 
 @media (max-width: 900px) {

@@ -392,7 +392,8 @@ const deletestudent=async()=>{
       console.error('Error deleting staff:', error.message);
     }
   }else{
-    alert("Enter:'DELETE STUDENT' in the box")
+    alert("Enter:'DELETE STUDENT' in the box");
+    setdeleteverifys('');
   }
 }
   const courtesy_titlename=[
