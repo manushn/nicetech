@@ -42,6 +42,10 @@ input::-webkit-outer-spin-button,
 
 .topleft input{
     height:20px;
+    width: 150px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid black;
 }
 
 .topright ul{
@@ -84,6 +88,9 @@ input::-webkit-outer-spin-button,
 .studentconsub input{
     width: 200px;
     margin-left: 10%;
+    padding: 8px;
+    border: 1px solid black;
+    border-radius: 10px;
 
 }
 
@@ -251,10 +258,17 @@ input::-webkit-outer-spin-button,
 }
 .deletestu input{
     color:red;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px solid black;
+    margin-top: 10px;
+    margin-right: 10px;
 }
-.recapchabtn ReCAPTCHA{
-    width:10px;
+.deletestu button:hover{
+    border: 1px solid red;
+    color:red;
 }
+
 
 
 @media (max-width: 900px) {

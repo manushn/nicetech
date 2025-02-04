@@ -11,7 +11,7 @@ router.post("/verifycaptcha", async (req, res) => {
   console.log("captchavalue",captchaValue);
 
   if (!captchaValue) {
-    return res.status(400).json({ success: false, message: "Captcha is required" });
+    return res.status(203).json({ success: false, message: "Captcha is required" });
   }
 
   const secretKey = process.env.RECAPCHA_SECRETKEY; 
@@ -22,11 +22,11 @@ router.post("/verifycaptcha", async (req, res) => {
     if (response.data.success) {
       return res.status(200).json({ success: true, message: "Captcha verified" });
     } else {
-      return res.status(400).json({ success: false, message: "Captcha verification failed" });
+      return res.status(203).json({ success: false, message: "Captcha verification failed" });
     }
   } catch (error) {
     console.error("Error verifying captcha:", error.message);
-    return res.status(500).json({ success: false, message: "Server error" });
+    return res.status(203).json({ success: false, message: "Server error" });
   }
 });
 

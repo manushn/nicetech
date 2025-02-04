@@ -44,7 +44,7 @@ function Managestudents() {
   const [address,setaddress]=useState('');
   const [parentname,setparentname]=useState('');
   const [pcontactnumber,setpcontactnumber]=useState('');
-  const [studymode,setstudymode]=useState('');
+  const [admissionmode,setadmissionmode]=useState('');
   const [staymode,setstaymode]=useState('');
   const [travelmode,settravelmode]=useState('');
   const [status,setstatus]=useState('');
@@ -144,7 +144,7 @@ function Managestudents() {
            setaddress('');
            setparentname('');
            setpcontactnumber('');
-           setstudymode('');
+           setadmissionmode('');
            setstaymode('');
            settravelmode('');
            setstatus('');
@@ -201,7 +201,7 @@ function Managestudents() {
           setaddress(studentdata.address || "");
           setparentname(studentdata.parentname || "");
           setpcontactnumber(studentdata.pcontactnumber || "");
-          setstudymode(studentdata.studymode || "");
+          setadmissionmode(studentdata.admissionmode || "");
           setstaymode(studentdata.staymode || "");
           settravelmode(studentdata.travelmode || "");
           setstatus(studentdata.status || "");
@@ -240,7 +240,7 @@ function Managestudents() {
         address,
         parentname,
         pcontactnumber,
-        studymode,
+        admissionmode,
         staymode,
         travelmode,
         status,
@@ -259,10 +259,17 @@ function Managestudents() {
       console.log("response for add send")
       sessionStorage.setItem('token', response.data.token);
       if (response.data.success){
-        alert("Student Updated")
+        
         setstudenteditbtn(false);
         setDepartmentselect(false);
         setStudentsselect(true);
+        setbatchselect(false);
+      }
+      if(response.data.fullsuccess){
+        
+        setstudenteditbtn(false);
+        setDepartmentselect(false);
+        setStudentsselect(false);
         setbatchselect(false);
       }
 
@@ -302,7 +309,7 @@ function Managestudents() {
           address,
           parentname,
           pcontactnumber,
-          studymode,
+          admissionmode,
           staymode,
           travelmode,
           status,
@@ -339,7 +346,7 @@ function Managestudents() {
            setaddress('');
            setparentname('');
            setpcontactnumber('');
-           setstudymode('');
+           setadmissionmode('');
            setstaymode('');
            settravelmode('');
            setstatus('');
@@ -420,10 +427,10 @@ const deletestudent=async()=>{
     { value: 'MECHANICAL', label: 'MECHANICAL' }
   ];
 
-  const studymodeselect=[
+  const admissionmodeselect=[
     {value:'',label:'Study Mode'},
-    {value:'Full Time',label:"Full Time"},
-    {value:'Part Time',label:'Part Time'}
+    {value:'REGULAR',label:"REGULAR"},
+    {value:'DIRECT SECOUND YEAR',label:'DIRECT SECOUND YEAR'}
   ];
 
   const staymodeselect =[
@@ -522,7 +529,7 @@ const backbutton = async()=>{
                 setaddress('');
                 setparentname('');
                 setpcontactnumber('');
-                setstudymode('');
+                setadmissionmode('');
                 setstaymode('');
                 settravelmode('');
                 setstatus('');
@@ -657,13 +664,13 @@ const backbutton = async()=>{
               />
               <p>{pcontactnumessage}</p>
 
-              <label>Study Mode</label>
+              <label>Admission Mode</label>
               <select
-                value={studymode}
-                onChange={(e) => setstudymode(e.target.value)}
+                value={admissionmode}
+                onChange={(e) => setadmissionmode(e.target.value)}
                 required
                >
-                  {studymodeselect.map((optionS) => (
+                  {admissionmodeselect.map((optionS) => (
                     <option key={optionS.value} value={optionS.value}>
                       {optionS.label}
                     </option>
@@ -899,13 +906,13 @@ const backbutton = async()=>{
               />
               <p>{pcontactnumessage}</p>
 
-              <label>Study Mode</label>
+              <label>Admission Mode</label>
               <select
-                value={studymode}
-                onChange={(e) => setstudymode(e.target.value)}
+                value={admissionmode}
+                onChange={(e) => setadmissionmode(e.target.value)}
                 required
                >
-                  {studymodeselect.map((optionS) => (
+                  {admissionmodeselect.map((optionS) => (
                     <option key={optionS.value} value={optionS.value}>
                       {optionS.label}
                     </option>
@@ -967,9 +974,9 @@ const backbutton = async()=>{
                         <div className="studenteditno">
                           <h2>Selected Student</h2>
                           <div className="studenteditnocon">
-                            <p>Student Name : {studentname}</p>
-                            <p>Student Id : {studentid}</p>
-                            <p>Register Number: {regnumber}</p>
+                            <p>Student Name:{studentname}</p>
+                            <p>Student Id:  {studentid}</p>
+                            <p>Register Number:  {regnumber}</p>
                             <p>Gender: {gender}</p>
                             <p>DOB: {dob}</p>
                             <p>Department: {department}</p>
@@ -980,7 +987,7 @@ const backbutton = async()=>{
                             <p>Address: {address}</p>
                             <p>Parent Name: {parentname}</p>
                             <p>Parent Contact Number: {pcontactnumber}</p>
-                            <p>Study Mode: {studymode}</p>
+                            <p>Admission Mode: {admissionmode}</p>
                             <p>Stay Mode: {staymode}</p>
                             <p>Travel Mode: {travelmode}</p>
                             <p>AdmitedDate: {admiteddate}</p>

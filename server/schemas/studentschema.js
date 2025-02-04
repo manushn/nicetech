@@ -15,7 +15,7 @@ const StudentSchema =new mongoose.Schema({
     address:{type:String,required:true},
     parentname:{type:String,required:true},
     pcontactnumber:{type:String,required:true},
-    studymode:{type:String,required:true},
+    admissionmode:{type:String,required:true},
     staymode:{type:String,required:true},
     travelmode:{type:String,required:true},
     status:{type:String,required:true},

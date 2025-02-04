@@ -46,41 +46,80 @@ router.post('/addstudent',Verifytoken,async(req,res)=>{
     if (req.userdata.role === "admin"){
   const {courtest_title,studentname,regnumber,gender,dob,department,
     batch,contactnumber,email, place,address,parentname,pcontactnumber,
-    studymode,staymode,travelmode,status,admiteddate} =req.body;
+    admissionmode,staymode,travelmode,status,admiteddate} =req.body;
 
     console.log(courtest_title,studentname,regnumber,gender,dob,department,
         batch,contactnumber,email, place,address,parentname,pcontactnumber,
-        studymode,staymode,travelmode,status,admiteddate);
+        admissionmode,staymode,travelmode,status,admiteddate);
 
   if(!courtest_title||!studentname||!regnumber||!gender||!dob||!department||
     !batch||!contactnumber||!email||!place||!address||!parentname||!pcontactnumber||
-    !studymode||!staymode||!travelmode||!status||!admiteddate){
+    !admissionmode||!staymode||!travelmode||!status||!admiteddate){
         return res.status(203).json({message:"All fields are required", token: req.newToken});    
   };
 
 //-----------------
 //To find the next student Id
-async function findGreatestStuId() {
-              try {
-                  const result = await StudentModel.aggregate([
-                      { $group: { _id: null, maxstudentid: { $max: "$studentid" } } }
-                  ]);
-                  return result.length > 0 ? Number(result[0].maxstudentid) + 1 : 90100;
-              } catch (error) {
-                  
-                  console.error("Error finding greatest staffId:", error);
-                  throw error;
+async function findGreatestStuId(department,batch,admissionmode) {
+              const collegecode=9640;
+              let departmentcode;
+              let admission;
+              let laststudent;
+              
+
+              if (department==="ARTIFICIAL INTELLIGENCE AND DATA SCIENCE"){
+                    departmentcode="AI"
+              }else if (department==="COMPUTER SCIENCE ENGINEERING"){
+                    departmentcode="CSE"
+              }else if(department==="ELECTRONICS AND COMMUNICATION ENGINEERING"){
+                    departmentcode="ECE"
+              }else if(department==='ELECTRICAL AND ELECTRONICS ENGINEERING'){
+                    departmentcode="EEE"
+              }else if(department==='INFORMATION TECHNOLOGY'){
+                    department="IT"
+              }else if(department==='MECHANICAL'){
+                    department="MECH"
               }
+//-------------------------------------------------------------------------------
+              
+              if (admissionmode==="REGULAR"){
+                    admission="R"
+              }else if(admissionmode==="DIRECT SECOUND YEAR"){
+                    admission="D"
+              }
+//-------------------------------------------------------------------------------
+              try{
+                laststudent = await StudentModel.findOne({ department, batch}).sort({ studentid: -1 }).exec();
+
+                let newrollnumber;
+
+                if(laststudent){
+                    const lastrollnumber=laststudent.studentid;
+                    const lastnumber=parseInt(lastrollnumber.slice(-3),10);
+                    const newnumber=(lastnumber+1).toString().padStart(3,"0");
+
+                    newrollnumber=`${collegecode}${batch}${admission}${departmentcode}${newnumber}`;
+                }else{
+                    newrollnumber=`${collegecode}${batch}${admission}${departmentcode}001`;
+                }
+
+                return newrollnumber;
+
+              }catch(error){
+                console.error("Error fetching Student ID:", error);
+              }
+              
+
           };
 
 //To save the Student details
 try{
     const regnumbercheck=await StudentModel.find({regnumber:regnumber});
     if(regnumbercheck.length>0){
-        console.log("Regnumber on db:",regnumbercheck);
+        
         return res.status(203).json({message:"Register Number Already Exist!", token: req.newToken})
     }
-    const stuID=await findGreatestStuId();
+    const stuID=await findGreatestStuId(department,batch,admissionmode);
 
     const newstudent= new StudentModel({
         studentid:stuID,
@@ -97,7 +136,7 @@ try{
         address,
         parentname,
         pcontactnumber,
-        studymode,
+        admissionmode,
         staymode,
         travelmode,
         status,
@@ -128,7 +167,62 @@ router.put("/studentupdate", Verifytoken, async (req, res) => {
         return res.status(403).json({ message: "Unauthorized access", token: req.newToken });
     }
 
-    try {
+    //Initializing new roll number 
+    let newrollnumber;
+
+    // to set the new roll number 
+    try{
+            const collegecode=9640;
+            let departmentcode;
+            let admission;
+              
+        const { studentid, ...updateData } = req.body;
+        const studentdata=await StudentModel.find({studentid:studentid});
+
+
+        if (updateData.admissionmode==="REGULAR"){
+            admission="R"
+            }else if(updateData.admissionmode==="DIRECT SECOUND YEAR"){
+             admission="D"
+             }
+
+        if (updateData.department==="ARTIFICIAL INTELLIGENCE AND DATA SCIENCE"){
+            departmentcode="AI"
+            }else if (updateData.department==="COMPUTER SCIENCE ENGINEERING"){
+            departmentcode="CSE"
+            }else if(updateData.department==="ELECTRONICS AND COMMUNICATION ENGINEERING"){
+            departmentcode="ECE"
+            }else if(updateData.department==='ELECTRICAL AND ELECTRONICS ENGINEERING'){
+            departmentcode="EEE"
+            }else if(updateData.department==='INFORMATION TECHNOLOGY'){
+            department="IT"
+            }else if(updateData.department==='MECHANICAL'){
+            department="MECH"
+                }
+
+
+        
+        if (studentdata.department!=updateData.department||studentdata.batch!=updateData.batch||studentdata.admissionmode!=updateData.admissionmode){
+            const laststudent = await StudentModel.findOne( {department:updateData.department, batch:updateData.batch}).sort({ studentid: -1 }).exec();
+            if(laststudent){       
+                const lastrollnumber=laststudent.studentid;
+                const lastnumber=parseInt(lastrollnumber.slice(-3),10);
+                const newnumber=(lastnumber+1).toString().padStart(3,"0");
+
+                newrollnumber=`${collegecode}${updateData.batch}${admission}${departmentcode}${newnumber}`;
+            }else{
+                newrollnumber=`${collegecode}${updateData.batch}${admission}${departmentcode}001`;
+            }
+        }
+
+    }catch(error){
+        console.log(error)
+    }
+
+//-------------------------------------------------------------------------------------------------------------------
+
+    if(!newrollnumber){
+        try {
         const { studentid, ...updateData } = req.body;
 
         if (!studentid) {
@@ -145,14 +239,61 @@ router.put("/studentupdate", Verifytoken, async (req, res) => {
             { $set: { name: updateData.studentname, email: updateData.email } }
         );
 
-        if (updatedStudent.modifiedCount > 0 || updatedUser.modifiedCount > 0) {
-            return res.status(200).json({ message: "Student updated successfully", token: req.newToken, success: true });
-        } else {
-            return res.status(203).json({ message: "Student not found or no changes detected", token: req.newToken });
+        if(updatedStudent.modifiedCount>0&& updatedUser.modifiedCount>0){
+            return res.status(200).json({Message:"Student details updated",success:true})
+        }else{
+            return res.status(203).json({Message:"Student not updated",success:false})
         }
+
+        
     } catch (error) {
         console.error("Update Error:", error);
         return res.status(500).json({ message: "Internal Server Error", error: error.message, token: req.newToken });
+    }
+    }else{
+        const { studentid, ...updateData } = req.body;
+
+        const newstudent= new StudentModel({
+            studentid:newrollnumber,
+            courtest_title:updateData.courtest_title,
+            studentname:updateData.studentname,
+            regnumber:updateData.regnumber,
+            gender:updateData.gender,
+            dob:updateData.dob,
+            department:updateData.department,
+            batch:updateData.batch,
+            contactnumber:updateData.contactnumber,
+            email:updateData.email, 
+            place:updateData.place,
+            address:updateData.address,
+            parentname:updateData.parentname,
+            pcontactnumber:updateData.pcontactnumber,
+            admissionmode:updateData.admissionmode,
+            staymode:updateData.staymode,
+            travelmode:updateData.travelmode,
+            status:updateData.status,
+            admiteddate:updateData.admiteddate
+    
+        });
+
+        const newUser = new UserModel({
+            username: newrollnumber,
+            password:updateData.dob,
+            email:updateData.email,
+            role:'student',
+            name: updateData.studentname,
+        });
+        await newstudent.save();
+        await newUser.save();
+
+        const deletedstudent = await StudentModel.deleteOne({ studentid });
+        const deletedUser = await UserModel.deleteOne({ username: studentid });
+
+        if (deletedstudent.deletedCount > 0 && deletedUser.deletedCount > 0) {
+            return res.status(200).json({ message: "Student updated successfully", token: req.newToken, fullsuccess: true });
+        } else {
+            return res.status(203).json({ message: "Student not found", token: req.newToken });
+        }
     }
 });
 
@@ -168,7 +309,7 @@ router.delete("/studentdelete", Verifytoken, async (req, res) => {
             const deletedstudent = await StudentModel.deleteOne({ studentid });
             const deletedUser = await UserModel.deleteOne({ username: studentid });
 
-            if (deletedstudent.deletedCount > 0 && deletedUser.deletedCount > 0) {
+            if (deletedstudent.deletedCount > 0 && deletedUser.deletedCount > 0 && updatedStudent.modifiedCount > 0 && updatedUser.modifiedCount > 0) {
                 return res.status(200).json({ message: "Student deleted successfully", token: req.newToken, success: true });
             } else {
                 return res.status(203).json({ message: "Student not found", token: req.newToken });

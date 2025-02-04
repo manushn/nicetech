@@ -3,8 +3,11 @@ import "./css/logo.css"
 function Logos() {
   return (
     <>
-    <div className="logos">
+    <div className="fulllogos">
     <img src='nilogo.png' alt='logo' width={'100%'} />
+    </div>
+    <div className="shortlogo">
+      
     </div>
     </>
   )
