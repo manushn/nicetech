@@ -68,7 +68,7 @@ function Managestaffs() {
         setRole(selectedStaff.role);
         setjoinedDate(selectedStaff.joined_date);
         setdob(selectedStaff.dob);
-        console.log("user data updated to state")
+        
       };
       if (addstaffbtn){
                 setcourtesyTitle('');
@@ -240,7 +240,7 @@ function Managestaffs() {
         navigate('/');
       }
       sessionStorage.setItem("token",response.data.token);
-      console.log("New token in update staff",response.data.token);
+      
       alert(response.data.message);
       
 
@@ -289,6 +289,7 @@ function Managestaffs() {
     { value: '', label: 'Select Role' },
     { value: 'admin', label: 'Admin' },
     { value: 'staff', label: 'Staff' },
+    {value:'superstaff',label:'Super Staff'}
   ];
 
   const courtesy_titlename=[

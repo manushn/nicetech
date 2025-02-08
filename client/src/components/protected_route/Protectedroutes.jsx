@@ -5,7 +5,7 @@ function Protectedroutes({ children }) {
   const navigate = useNavigate();
   const isLoggedin = sessionStorage.getItem('isLoggedin');
   const userRole=sessionStorage.getItem('role')
-  console.log(isLoggedin);
+  
 
   useEffect(() => {
     if (!isLoggedin) {
@@ -14,9 +14,10 @@ function Protectedroutes({ children }) {
     }
   }, [isLoggedin, navigate]); // Dependencies ensure the effect runs if these values change
 
-  const allowedRoles = ['admin', 'student', 'staff', 'parents']; // Allowed roles
+  console.log("The role is:",userRole)
+  const allowedRoles = ['admin', 'student', 'staff', 'parents','superstaff']; // Allowed roles
   if (!allowedRoles.includes(userRole)) {
-    console.log("Unauthorized role");
+    console.log("Unauthorized roles");
     navigate('/'); // Redirect unauthorized roles to login
     return null;
   }

@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,lazy } from 'react';
 import Logout from '../components/logout/Logout'
 import { useNavigate } from 'react-router-dom';
-import Adminmaindash from '../components/admindashboard/Adminmaindash';
+import Adminmaindash from '../components/admindashboard/Adminmaindash' ;
 import "./css/admincon.css"
-import DisableBackButton from '../components/disable_back_button/DisableBackButton';
+import DisableBackButton from '../components/disable_back_button/DisableBackButton' ;
 
 function Admincontent() {
   const navigate = useNavigate();
@@ -21,6 +21,9 @@ function Admincontent() {
           break;
         case 'parents':
           navigate('/Parentcontent');
+          break;
+        case 'superstaff':
+          navigate('/superstaffcontent');
           break;
         default:
           console.log('Unauthorized role');

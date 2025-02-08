@@ -1,13 +1,14 @@
-import React from 'react'
+import {React,lazy} from 'react'
 import Home from './pages/Home'
 import Signupone from './components/login/Signups'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './components/protected_route/Protectedroutes';
-import Admincontent from './pages/admincontent';
-import Studentcontent from './pages/Studentcontent';
-import Staffcontent from './pages/Staffcontent';
-import Parentscontent from './pages/Parentscontent';
-import DisableBackButton from './components/disable_back_button/DisableBackButton';
+const Admincontent =lazy(()=>import('./pages/admincontent'));
+const Studentcontent = lazy(()=>import('./pages/Studentcontent'));
+const Staffcontent =lazy(()=>import('./pages/Staffcontent')) ;
+const Parentscontent =lazy(()=>import('./pages/Parentscontent')) ;
+const DisableBackButton =lazy(()=>import('./components/disable_back_button/DisableBackButton')) ;
+const Superstaffcontent =lazy(()=>import('./pages/Superstaffcontent')) ;
 
 
 function App() {
@@ -52,6 +53,14 @@ function App() {
       element={
         <ProtectedRoute>
           <Parentscontent />
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/superstaffcontent"
+      element={
+        <ProtectedRoute>
+          <Superstaffcontent />
         </ProtectedRoute>
       }
     />

@@ -19,6 +19,9 @@ function Parentscontent() {
         case 'admin':
           navigate("/Admincontent");
           break;
+        case 'superstaff':
+          navigate('/superstaffcontent');
+          break;
         default:
           console.log('Unauthorized role');
           navigate('/');

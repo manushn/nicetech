@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
                 );
   
         // Respond with success and the user's role
-        res.status(200).json({ message: "Login Successful", success: true, role: user.role, name: user.name ,token:jwttoken});
+        res.status(200).json({ message: "Login Successful", success: true, role: user.role, name: user.name ,username:user.username,token:jwttoken});
       } catch (error) {
         res.status(500).json({ error: error.message, success: false });
       }

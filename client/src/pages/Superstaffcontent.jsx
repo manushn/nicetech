@@ -1,26 +1,26 @@
 import React, { useEffect } from 'react';
-import Logout from '../components/logout/Logout'
 import { useNavigate } from 'react-router-dom';
+import Superstaffcontent from "../components/superstaff/Superstaffmain.jsx"
 
-function Studentcontent() {
+function Parentscontent() {
   const navigate = useNavigate();
   const roles=sessionStorage.getItem('role');
   console.log(roles)
   useEffect(() => {
-    if (roles !== 'student') {
+    if (roles !== 'superstaff') {
       // Redirect users based on their roles
       switch (roles) {
         case 'staff':
           navigate('/Staffcontent');
           break;
+        case 'student':
+          navigate('/Studentcontent');
+          break;
         case 'admin':
           navigate("/Admincontent");
           break;
-        case 'parents':
-          navigate('/Parentcontent');
-          break;
-        case 'superstaff':
-          navigate('/superstaffcontent')
+        case 'parent':
+            navigate("/Parentscontent")
         default:
           console.log('Unauthorized role');
           navigate('/');
@@ -31,15 +31,15 @@ function Studentcontent() {
   }, [roles, navigate]);
 
   // Only render content if the role is admin
-  if (roles !== 'student') {
+  if (roles !== 'superstaff') {
     return null; // Prevent rendering before redirection
   }
   return (
     <div>
-      <h1>Welcome student</h1>
-      <Logout/>
+      <Superstaffcontent/>
+      
     </div>
   )
 }
 
-export default Studentcontent
+export default Parentscontent

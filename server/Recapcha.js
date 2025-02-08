@@ -8,14 +8,14 @@ const router = express.Router();
 
 router.post("/verifycaptcha", async (req, res) => {
   const { captchaValue } = req.body;
-  console.log("captchavalue",captchaValue);
+ 
 
   if (!captchaValue) {
     return res.status(203).json({ success: false, message: "Captcha is required" });
   }
 
   const secretKey = process.env.RECAPCHA_SECRETKEY; 
-  console.log("Recapcha sec key :",secretKey)
+  
   try {
     const response = await axios.post(`https://www.google.com/recaptcha/api/siteverify?secret=${secretKey}&response=${captchaValue}`);
 

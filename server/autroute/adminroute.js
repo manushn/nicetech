@@ -10,9 +10,24 @@ router.post("/getstaff", Verifytoken, async (req, res) => {
     if(req.userdata.role==="admin"){
     try {
         // Fetch staff details based on query
-        console.log("iddata:",req.body.iddata)
+        
         const staffDetails = await StaffModel.find(req.body.iddata,req.body.sortdata);
         res.status(200).json({ staffDetails, token: req.newToken });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: "Unable to fetch staff details" });
+    }
+}
+});
+
+router.post("/getstaffprofile", Verifytoken, async (req, res) => {
+    
+    if(req.userdata.role==="admin"||req.userdata.role==="superstaff"||req.userdata.role==="staff"){
+    try {
+        // Fetch staff details based on query
+        
+        const staffDetails = await StaffModel.find(req.body.iddata);
+        res.status(200).json({ staffDetails, token: req.newToken,success:true });
     } catch (error) {
         console.error(error.message);
         res.status(500).json({ message: "Unable to fetch staff details" });
@@ -93,7 +108,6 @@ router.put("/staffupdate", Verifytoken, async (req, res) => {
             if (!staffid) {
                 return res.status(400).json({ message: "Staff ID is required for update" });
             }
-            console.log("from Staffupdate",updateData.staffname,updateData.role)
             const updatedStaff = await StaffModel.updateOne({ staffid }, { $set: updateData });
             const updatedUser = await UserModel.updateOne({ username: staffid }, { $set: { name: updateData.staffname, email:updateData.email,role: updateData.role } });
 

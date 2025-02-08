@@ -1,21 +1,63 @@
-import React,{useState} from "react";
+import React,{useState,lazy, useEffect} from "react";
 import Profile from "./Profile";
-import Managestaffs from "./Managestaffs";
-import Managestudents from "./Managestudents";
-import Attendance from "./Attendence";
-import Accounts from "./Accounts";
-import Progress from "./progress";
-import Maintainclasses from "./Maintainclasses"
+import Managestaffs from "./Managestaffs" ;
+import Managestudents from "./Managestudents" ;
+import Attendance from "./Attendence" ;
+import Accounts from "./Accounts" ;
+import Progress from "./progress" ;
+import Maintainclasses from "./Maintainclasses"; 
+import Logout from "../logout/Logout";
+import Admindashboard from "./Admindashboard" ;
 
 import "./css/adminmain.css"
-import Logout from "../logout/Logout";
-import Admindashboard from "./Admindashboard";
+import axios from 'axios';
+
+const backendurl='http://192.168.1.23:3000/';
+
+
 function Adminmaindash() {
     const Name=sessionStorage.getItem('Name');
+    const [userdata,setuserdata]=useState([]);
     const [activeTab, setActiveTab] = useState('dashboard');
     const[name,setName]=useState(Name);
     const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
+    const [profilevis,setprofilevis]=useState(false)
 
+    const probilevisibility =()=>{
+      setprofilevis(!profilevis)
+
+    };
+
+    useEffect(()=>{
+      const fetchDatas=async()=>{
+         const usernamedata=sessionStorage.getItem('username');
+         const token=sessionStorage.getItem('token');
+         if (profilevis){
+          try{
+            
+         const response= await axios.post(
+          `${backendurl}admin/getstaffprofile`,
+          { iddata:{staffid: usernamedata },},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+         )
+
+         if (response.data.success){
+           setuserdata(response.data.staffDetails);
+           sessionStorage.setItem('token',response.data.token)
+         }
+      }catch(error){
+        console.log(error)
+      }  
+          
+          }
+    }
+    fetchDatas()
+    },[profilevis])
     
    
     const rendercon=()=>{
@@ -51,7 +93,7 @@ function Adminmaindash() {
    
         <div className="topmenu">
           
-             <div className="topoption">
+             <div className="topoption" onClick={probilevisibility}>
                  <div className="userprofile">
                      <img src="profile.png"/>
                      <p>{name}</p>
@@ -65,6 +107,89 @@ function Adminmaindash() {
     </div>
 
     <div className="down">
+
+        {profilevis&&(
+          <div className="profileconmain">
+             <div className="profileclosebtn">
+              <button
+              onClick={
+                probilevisibility
+              }
+              >X</button>
+             </div>
+             <div className="profilecon">
+              <h1>Profile</h1>
+              <h3>Hello {name} 😊</h3>
+              <div className="profile">
+                {userdata.length>0 ?(
+                  <div className="profildata">
+                    <div className="profiledata1">
+                    <div className="pd1">
+                      <h3>Name:</h3><h4>{userdata[0].courtesy_title} . {userdata[0].staffname}</h4>
+                    </div>
+
+                    <div className="pd1">
+                    <h3>Staff ID:</h3><h4>{userdata[0].staffid}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Gender:</h3><h4>{userdata[0].gender}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Date Of Birth:</h3><h4>{userdata[0].dob}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Department:</h3><h4>{userdata[0].department}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Designation:</h3><h4>{userdata[0].designation}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Contact Number:</h3><h4>{userdata[0].contact_no}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Email:</h3><h4>{userdata[0].email}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Place:</h3><h4>{userdata[0].place}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Address:</h3><h4>{userdata[0].address}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Special Designation:</h3><h4>{userdata[0].special_designation}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Joined Date:</h3><h4>{userdata[0].joined_date}</h4>
+                    </div>
+
+                    <div className="pd1">
+                      <h3>Access Role:</h3><h4>{userdata[0].role}</h4>
+                    </div>
+
+                  </div>
+                  </div>
+                  
+                ):(
+                  <>
+                  <p>No User data</p>
+                  </>
+                )}
+                
+              </div>
+             </div>
+          </div>
+        )}
+        
         <div className="sidebar">
             
             <div className="slider">

@@ -52,11 +52,12 @@ function Login() {
       });
 
       if (response.data.success) {
-        sessionStorage.setItem('isLoggedin', 'true');
+        sessionStorage.setItem('isLoggedin', "true");
         sessionStorage.setItem('role', response.data.role);
         sessionStorage.setItem('Name', response.data.name);
         sessionStorage.setItem('token', response.data.token);
-
+        sessionStorage.setItem('username',response.data.username);
+        
         setMessage('Login Successful');
 
         switch (response.data.role) {
@@ -72,6 +73,8 @@ function Login() {
           case 'parents':
             Navigate('/Parentscontent');
             break;
+          case 'superstaff':
+            Navigate('/superstaffcontent')
           default:
             setMessage('Role not defined');
         }

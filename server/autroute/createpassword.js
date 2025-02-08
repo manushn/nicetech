@@ -18,7 +18,7 @@ function generateOtp() {
 // Function to send OTP via email
 async function sendOtp(email, name,username) {
     otp = generateOtp();
-    console.log(`Generated OTP: ${otp}`);
+    
     otpStore[username] = otp;
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -37,7 +37,7 @@ async function sendOtp(email, name,username) {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log('OTP sent successfully');
+        
         
         return true;
     } catch (error) {
@@ -83,7 +83,7 @@ router.put('/verifyotp', async (req, res) => {
    const storedotps= otpStore[username];
 
     if (otps == storedotps) {
-        console.log("Otp Verified")
+        
         const hashedPassword = await bcrypt.hash(password, 10);
         try {
             const updatedUser = await UserModel.updateOne(

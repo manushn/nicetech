@@ -1,8 +1,8 @@
-import React from 'react'
-import Tops from '../components/top/Tops'
-import Popupss from '../components/popup/Popupss'
-import Login from '../components/login/Login'
-import DisableBackButton from '../components/disable_back_button/DisableBackButton';
+import React ,{lazy}from 'react'
+const  Tops =lazy(()=>import('../components/top/Tops')) ;
+const Popupss =lazy(()=>import('../components/popup/Popupss')); 
+const Login =lazy(()=>import('../components/login/Login')); 
+const DisableBackButton =lazy(()=>import('../components/disable_back_button/DisableBackButton')) ;
 
 
 

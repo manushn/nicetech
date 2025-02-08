@@ -60,7 +60,7 @@ function Managestudents() {
     if(batch.length >4){
       setbatchmessage("The Batch must be in this formate : 2023");
       setbatch('');
-      console.log("UseEffect run")
+      
     }
   },[batch]);
 //.............................................................................
@@ -104,7 +104,7 @@ function Managestudents() {
       setsortdatas('');
       setsearchstuname('');
       setsearchstuid('');
-      console.log("Department set");
+      
     };
     if(batchselect){
       setcarddata([]);
@@ -112,7 +112,7 @@ function Managestudents() {
       setsortdatas('');
       setsearchstuname('');
       setsearchstuid('');
-      console.log("batch set");
+      
     };
     if(Searchbox.length>0){
 
@@ -161,7 +161,6 @@ function Managestudents() {
       setcarddata([]);
       try {
         const token = sessionStorage.getItem('token');
-        console.log( "Console log from getstudent",searchstuid,searchstuname,searchdistinct,sortdatas)
         const response = await axios.post(
           `${backendurl}admin/getstudent`,
           {studentid:searchstuid,studentname:searchstuname,distinctes:searchdistinct,searchfilter:{batch:currentbatch,department:currentdepartment}},
@@ -173,7 +172,7 @@ function Managestudents() {
           }
         );
         sessionStorage.setItem('token', response.data.token);
-        console.log(response.data);
+        
         if(response.data.success){ 
           setcarddata(response.data.studentdata);
           
@@ -184,7 +183,7 @@ function Managestudents() {
         };
 
         if (response.data.selectstudentdata && response.data.selectstudentdata.length > 0) {
-          console.log("Student Data Found:", response.data.selectstudentdata);
+          
           const studentdata = response.data.selectstudentdata[0];
            
           setstudentid(studentdata.studentid || "");
@@ -208,7 +207,13 @@ function Managestudents() {
           setadmiteddate(studentdata.admiteddate || "");
         } 
 
-        
+        if (response.data.loginstatus==='false'){
+          alert("Ivalid Token Loging Out....")
+          sessionStorage.removeItem('isLoggedin');
+          sessionStorage.removeItem('role');
+          sessionStorage.removeItem("token");
+          navigate('/');
+        }
 
         
       } catch (error) {
@@ -256,7 +261,7 @@ function Managestudents() {
             'Content-Type': 'application/json',
           },
         });
-      console.log("response for add send")
+      
       sessionStorage.setItem('token', response.data.token);
       if (response.data.success){
         
@@ -276,19 +281,21 @@ function Managestudents() {
       if (response.data.message){
         alert(response.data.message)
       }
-      console.log("Received response")
+
+      if (response.data.loginstatus==='false'){
+        alert("Ivalid Token Loging Out....")
+        sessionStorage.removeItem('isLoggedin');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem("token");
+        navigate('/');
+      }
+      
  }catch(error){
   alert(error)
  } 
   }
 
- //.............................................................................
-
-  useEffect(() => {
-    console.log('Batch data', carddata);
-    console.log("student data:",studentsdata);
-  }, [carddata,studentsdata]);
-
+ 
 //.............................................................................
   const handeladdstudent= async()=>{
     
@@ -325,7 +332,7 @@ function Managestudents() {
               'Content-Type': 'application/json',
             },
           });
-        console.log("response for add send")
+        
   
         if (response.data.message){
           alert(response.data.message)
@@ -357,7 +364,14 @@ function Managestudents() {
            setbatchselect(true);
            
         }
-        console.log("Received response")
+        if (response.data.loginstatus==='false'){
+          alert("Ivalid Token Loging Out....")
+          sessionStorage.removeItem('isLoggedin');
+          sessionStorage.removeItem('role');
+          sessionStorage.removeItem("token");
+          navigate('/');
+        }
+        
    }catch(error){
     alert(error)
    } 
@@ -394,6 +408,13 @@ const deletestudent=async()=>{
       };
       alert(response.data.message);
 
+      if (response.data.loginstatus==='false'){
+        alert("Ivalid Token Loging Out....")
+        sessionStorage.removeItem('isLoggedin');
+        sessionStorage.removeItem('role');
+        sessionStorage.removeItem("token");
+        navigate('/');
+      }
       
     } catch (error) {
       console.error('Error deleting staff:', error.message);
@@ -974,7 +995,7 @@ const backbutton = async()=>{
                         <div className="studenteditno">
                           <h2>Selected Student</h2>
                           <div className="studenteditnocon">
-                            <p>Student Name:{studentname}</p>
+                            <p>Student Name: {studentname}</p>
                             <p>Student Id:  {studentid}</p>
                             <p>Register Number:  {regnumber}</p>
                             <p>Gender: {gender}</p>

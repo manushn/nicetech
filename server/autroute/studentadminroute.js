@@ -48,10 +48,7 @@ router.post('/addstudent',Verifytoken,async(req,res)=>{
     batch,contactnumber,email, place,address,parentname,pcontactnumber,
     admissionmode,staymode,travelmode,status,admiteddate} =req.body;
 
-    console.log(courtest_title,studentname,regnumber,gender,dob,department,
-        batch,contactnumber,email, place,address,parentname,pcontactnumber,
-        admissionmode,staymode,travelmode,status,admiteddate);
-
+    
   if(!courtest_title||!studentname||!regnumber||!gender||!dob||!department||
     !batch||!contactnumber||!email||!place||!address||!parentname||!pcontactnumber||
     !admissionmode||!staymode||!travelmode||!status||!admiteddate){
@@ -229,9 +226,7 @@ router.put("/studentupdate", Verifytoken, async (req, res) => {
             return res.status(400).json({ message: "StudentId is required for update", token: req.newToken });
         }
 
-        console.log("Student ID:", studentid);
-        console.log("Student details:", updateData);
-
+        
         
         const updatedStudent = await StudentModel.updateOne({ studentid }, { $set: updateData });
         const updatedUser = await UserModel.updateOne(
@@ -301,7 +296,7 @@ router.delete("/studentdelete", Verifytoken, async (req, res) => {
     if (req.userdata.role === "admin") {
         try {
             const {studentid}  = req.body;
-            console.log("The student id for delete:",studentid);
+            
             if (!studentid) {
                 return res.status(203).json({ message: "Staff ID is required", token: req.newToken });
             }
