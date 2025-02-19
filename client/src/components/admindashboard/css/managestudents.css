@@ -265,6 +265,9 @@ input::-webkit-outer-spin-button,
     margin-top: 10px;
     margin-right: 10px;
 }
+.deletestu button{
+    background-color: red;
+}
 .deletestu button:hover{
     border: 1px solid red;
     color:red;

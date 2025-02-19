@@ -10,7 +10,7 @@
     
 }
 .stafftop h3{
-    font-size: 40px;
+    font-size: 30px;
     padding: 0;
     margin-bottom: 0;
 }
@@ -39,7 +39,7 @@
     align-items: center;
     cursor: pointer;
     background-color: rgb(4, 167, 4);
-    max-width: 110px;
+    width: 110px;
     padding: 5px;
     border-radius: 20px;
     padding-left: 19px;
@@ -287,7 +287,7 @@
 
 }
   
-  @media (max-width: 768px) {
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
     .staffcard {
       flex: 1 1 calc(50% - 32px); /* Adjust to 50% width for smaller screens */
     }
@@ -303,16 +303,23 @@
     }
   }
   
-  @media (max-width: 400px) {
-    .staffcard {
-      flex: 1 1 100%;
-      max-width: 100px; /* Full width for very small screens */
+  @media only screen and (max-width: 767px){
+    
+    .searchbutton button{
+      margin-top: 10px;
+    }
+
+    .staffcard{
+      flex: 1 1 80%;
+      max-width: 80px; /* Full width for very small screens */
     }
     .staffcards{
       padding-left: 0;
-      width: 80%;
+      width: 70%;
     }    
-    
+    .selstaffview{
+      width: 270px;
+    }
 
     
   }

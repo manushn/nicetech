@@ -19,6 +19,7 @@ const StaffSchema = new mongoose.Schema({
     special_designation:{type:String,require:true},
     role: { type: String, required: true },
     joined_date:{type:String,required:true},
+    lastedited:{type:String,required:true}
 }) ; 
 
 module.exports= mongoose.model("staff", StaffSchema);

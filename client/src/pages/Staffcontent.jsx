@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Logout from '../components/logout/Logout'
 import { useNavigate } from 'react-router-dom';
+import Staffmains from '../components/staff/Staffmains';
 
 function Staffcontent() {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ function Staffcontent() {
   return (
 
     <div>
-      <h1>Welcome staff</h1>
+      <Staffmains/>
       <Logout/>
     </div>
   )

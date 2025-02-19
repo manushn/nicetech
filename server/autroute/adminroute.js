@@ -15,7 +15,7 @@ router.post("/getstaff", Verifytoken, async (req, res) => {
         res.status(200).json({ staffDetails, token: req.newToken });
     } catch (error) {
         console.error(error.message);
-        res.status(500).json({ message: "Unable to fetch staff details" });
+        res.status(203).json({ message: "Unable to fetch staff details" });
     }
 }
 });
@@ -39,10 +39,11 @@ router.post("/getstaffprofile", Verifytoken, async (req, res) => {
 // Route to add a new staff member
 router.post("/staffadd", Verifytoken, async (req, res) => {
     if (req.userdata.role === "admin") {
-        const { courtesy_title, staffname, gender, dob,designation, department, contactNumber, email, place, address, special_designation, role, joined_date } = req.body;
+        const { courtesy_title, staffname, gender, dob,designation, department, contactNumber, email, place, address, special_designation, role, joined_date ,lastedited} = req.body;
+        console.log(lastedited)
 
-        if (!courtesy_title || !staffname || !gender ||!dob|| !designation || !department || !contactNumber || !email || !place || !address || !special_designation || !role || !joined_date) {
-            return res.status(400).json({ message: "All fields are required", token: req.newToken });
+        if (!courtesy_title || !staffname || !gender ||!dob|| !designation || !department || !contactNumber || !email || !place || !address || !special_designation || !role || !joined_date||!lastedited) {
+            return res.status(203).json({ message: "All fields are required", token: req.newToken });
         }
 
         async function findGreatestStaffId() {
@@ -75,7 +76,8 @@ router.post("/staffadd", Verifytoken, async (req, res) => {
                 address,
                 special_designation,
                 role,
-                joined_date
+                joined_date,
+                lastedited
             });
 
             const newUser = new UserModel({
@@ -91,7 +93,7 @@ router.post("/staffadd", Verifytoken, async (req, res) => {
             res.status(201).json({ message: "Staff and User created successfully", token: req.newToken, success: true });
         } catch (error) {
             console.error("In staff add try:", error.message);
-            res.status(500).json({ message: error.message, token: req.newToken });
+            res.status(203).json({ message: error.message, token: req.newToken });
         }
     } else {
         res.status(403).json({ access: false });
@@ -106,19 +108,19 @@ router.put("/staffupdate", Verifytoken, async (req, res) => {
         try {
             const { staffid, ...updateData } = req.body;
             if (!staffid) {
-                return res.status(400).json({ message: "Staff ID is required for update" });
+                return res.status(203).json({ message: "Staff ID is required for update" });
             }
             const updatedStaff = await StaffModel.updateOne({ staffid }, { $set: updateData });
             const updatedUser = await UserModel.updateOne({ username: staffid }, { $set: { name: updateData.staffname, email:updateData.email,role: updateData.role } });
 
-            if (updatedStaff.modifiedCount > 0 && updatedUser.modifiedCount > 0) {
+            if (updatedStaff.modifiedCount > 0 || updatedUser.modifiedCount > 0) {
                 res.status(200).json({ message: "Staff updated successfully", token: req.newToken, success: true });
             } else {
-                res.status(404).json({ message: "Staff not found or no changes detected", token: req.newToken });
+                res.status(203).json({ message: "Staff not found or no changes detected", token: req.newToken });
             }
         } catch (error) {
             console.error(error.message);
-            res.status(500).json({ message: "Unable to update staff details", token: req.newToken });
+            res.status(203).json({ message: "Unable to update staff details", token: req.newToken });
         }
     }
 });
@@ -131,7 +133,7 @@ router.delete("/staffdelete", Verifytoken, async (req, res) => {
         try {
             const { staffid } = req.body;
             if (!staffid) {
-                return res.status(400).json({ message: "Staff ID is required", token: req.newToken });
+                return res.status(203).json({ message: "Staff ID is required", token: req.newToken });
             }
 
             const deletedStaff = await StaffModel.deleteOne({ staffid });
@@ -140,11 +142,11 @@ router.delete("/staffdelete", Verifytoken, async (req, res) => {
             if (deletedStaff.deletedCount > 0 && deletedUser.deletedCount > 0) {
                 res.status(200).json({ message: "Staff deleted successfully", token: req.newToken, success: true });
             } else {
-                res.status(404).json({ message: "Staff not found", token: req.newToken });
+                res.status(203).json({ message: "Staff not found", token: req.newToken });
             }
         } catch (error) {
             console.error("Error deleting staff:", error.message);
-            res.status(500).json({ message: "Unable to delete staff", token: req.newToken });
+            res.status(203).json({ message: "Unable to delete staff", token: req.newToken });
         }
     }
 });

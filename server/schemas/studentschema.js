@@ -19,7 +19,8 @@ const StudentSchema =new mongoose.Schema({
     staymode:{type:String,required:true},
     travelmode:{type:String,required:true},
     status:{type:String,required:true},
-    admiteddate:{type:String,required:true}
+    admiteddate:{type:String,required:true},
+    lastedited:{type:String,require:true}
 })
 
 module.exports= mongoose.model("student", StudentSchema);

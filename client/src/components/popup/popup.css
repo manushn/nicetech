@@ -44,7 +44,7 @@
     cursor: pointer;
     color: white;
   }
-  @media only screen and (max-width: 660px){
+  @media only screen and (max-width: 767px){
     .popup img {
         max-width: 90%;
         max-height: 60%;
@@ -64,3 +64,11 @@
     }
   }
   
+  @media only screen and (min-width: 768px) and (max-width: 1024px){
+    .popup img {
+      max-width: 80%;
+      max-height: 50%;
+    }
+    
+      
+  }

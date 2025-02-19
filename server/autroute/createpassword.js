@@ -18,7 +18,7 @@ function generateOtp() {
 // Function to send OTP via email
 async function sendOtp(email, name,username) {
     otp = generateOtp();
-    
+    console.log("Email:",email,"Name:",name,"username:",username)
     otpStore[username] = otp;
     let transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -56,19 +56,27 @@ router.post('/signups', async (req, res) => {
     
     try {
         staffDetails = await UserModel.findOne({ username });
-        
+        console.log(staffDetails)
         if (staffDetails) {
-            const otpSent = await sendOtp(staffDetails.email, staffDetails.name,staffDetails.username);
-            if (otpSent) {
-                return res.status(200).json({ remessage: true });
-            } else {
-                return res.status(500).json({ nootp: true });
-            }
+            console.log(staffDetails.email, staffDetails.name,staffDetails.username,"beforeCheck")
+            
+                console.log(staffDetails.email, staffDetails.name,staffDetails.username,"Check")
+                const otpSent = await sendOtp(staffDetails.email, staffDetails.name,staffDetails.username);
+                
+                if (otpSent) {
+                     return res.status(200).json({ remessage: true });
+                } else {
+                     return res.status(500).json({ nootp: true });
+                }
+              
+
+            
         } else {
             return res.status(203).json({ nouser: "Staff details not found" });
         }
     } catch (error) {
         console.error('Error in finding staff:', error);
+        console.log(error);
         return res.status(203).json({ erroruser: "Error in finding staff", error });
     }
 });

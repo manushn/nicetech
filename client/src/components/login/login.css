@@ -13,9 +13,7 @@
     border-radius: 10px;
     border: 1px black solid;
 }
-.containerss:hover {
-    box-shadow: 1px 1px 50px lightblue; 
-}
+
 .detail{
     display: flex;
     flex-direction: column;
@@ -88,10 +86,10 @@
     align-items: center;
 }
 
-@media only screen and (max-width: 1000px){
+@media only screen and (max-width: 767px){
 
 .containerss{
-    margin-left: 7%;
+    margin-left: 8%;
     margin-right: 7%;
 }
 .containerss input{
@@ -107,4 +105,24 @@
 }
 
 
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px){
+    .containerss{
+        margin-left: 32%;
+        margin-right: 7%;
+        margin-top: 10%;
+    }
+    
+}
+
+
+@media only screen and (min-width: 1025px){
+    .containerss{
+        margin-left: 37%;
+        
+    }
+    .containerss:hover {
+        box-shadow: 1px 1px 50px lightblue; 
+    }
 }

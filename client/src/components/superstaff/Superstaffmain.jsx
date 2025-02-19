@@ -49,6 +49,15 @@ function Superstaffmain() {
            setuserdata(response.data.staffDetails);
            sessionStorage.setItem('token',response.data.token)
          }
+         if (response.data.loginstatus==='false'){
+          alert("Ivalid Token Loging Out....")
+          sessionStorage.removeItem('isLoggedin');
+          sessionStorage.removeItem('role');
+          sessionStorage.removeItem("token");
+          sessionStorage.removeItem("username");
+          sessionStorage.removeItem("Name")
+          navigate('/');
+        }
       }catch(error){
         console.log(error)
       }  
@@ -106,6 +115,7 @@ function Superstaffmain() {
 
     {profilevis&&(
       <div className="profileconmain">
+        <div className="profileconsub">
          <div className="profileclosebtn">
           <button
           onClick={
@@ -115,7 +125,6 @@ function Superstaffmain() {
          </div>
          <div className="profilecon">
           <h1>Profile</h1>
-          <h3>Hello {name} 😊</h3>
           <div className="profile">
             {userdata.length>0 ?(
               <div className="profildata">
@@ -182,6 +191,7 @@ function Superstaffmain() {
             )}
             
           </div>
+         </div>
          </div>
       </div>
     )}

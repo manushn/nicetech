@@ -17,7 +17,8 @@ function Managestaffs() {
   const [editStaff, setEditStaff] = useState(false);
   const [deleteVerify, setDeleteVerify] = useState('');
 
-  
+  const[contactnummessage,setcontactnummessage]=useState('');
+  const[emailmessage,setemailmessage]=useState('');
 
 
 
@@ -35,18 +36,17 @@ function Managestaffs() {
   const [role, setRole] = useState('');
   const [joinedDate, setjoinedDate] = useState('');
   const [dob,setdob]=useState('');
+  const [lastedited,setlastedited]=useState('');
 //--------------------------------------------------------------
 
-  // Reset Search Box
-  useEffect(() => {
-    if (searchdata.length <1) {
-      setSearchdata('');
-      
-    }
-  }, [searchdata, searchbox]);
+  
+
+
 
   
 //--------------------------------------------------------------
+
+
 
 //Used to set Staff Edit Details
 
@@ -68,6 +68,7 @@ function Managestaffs() {
         setRole(selectedStaff.role);
         setjoinedDate(selectedStaff.joined_date);
         setdob(selectedStaff.dob);
+        setlastedited(selectedStaff.lastedited);
         
       };
       if (addstaffbtn){
@@ -85,6 +86,7 @@ function Managestaffs() {
                setStaffId('');
                setdob(' ');
                setjoinedDate(' ');
+               setlastedited('');
                
                 
       }
@@ -99,7 +101,7 @@ function Managestaffs() {
       var cardsort
       try {
         if(searchbox.length >=1){
-         cardsort={staffid:1,courtesy_title:1, staffname:1,gender:1, designation:1, department:1, contact_no:1,email:1, place:1,address:1,special_designation:1,role:1,joined_date:1,dob:1};
+         cardsort={staffid:1,courtesy_title:1, staffname:1,gender:1, designation:1, department:1, contact_no:1,email:1, place:1,address:1,special_designation:1,role:1,joined_date:1,dob:1,lastedited:1};
         }else{
          cardsort={staffid:1,courtesy_title:1,staffname:1, designation:1, department:1};
         }
@@ -120,6 +122,8 @@ function Managestaffs() {
           sessionStorage.removeItem('isLoggedin');
           sessionStorage.removeItem('role');
           sessionStorage.removeItem("token");
+          sessionStorage.removeItem("username");
+          sessionStorage.removeItem("Name")
           navigate('/');
         }
         sessionStorage.setItem('token', response.data.token); // Update token
@@ -138,6 +142,7 @@ function Managestaffs() {
   const addStaff = async () => {
     try {
       const token = sessionStorage.getItem('token');
+      const lastusername=sessionStorage.getItem('Name');
       const newStaff = {
         courtesy_title:courtesyTitle,
         staffname: staffName,
@@ -151,7 +156,8 @@ function Managestaffs() {
         address,
         special_designation:specialdesignation,
         role,
-        joined_date:joinedDate
+        joined_date:joinedDate,
+        lastedited:lastusername
       };
 
       const response = await axios.post(
@@ -170,6 +176,8 @@ function Managestaffs() {
         sessionStorage.removeItem('isLoggedin');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("Name")
         navigate('/');
       }
       sessionStorage.setItem('token', response.data.token); // Update token
@@ -204,6 +212,8 @@ function Managestaffs() {
   const handleSave = async() => {
     try {
       const token = sessionStorage.getItem('token');
+      const lastusername=sessionStorage.getItem('Name');
+
       const newStaff={
           staffid:staffId,
           courtesy_title:courtesyTitle,
@@ -219,6 +229,7 @@ function Managestaffs() {
           special_designation:specialdesignation,
           role,
           joined_date:joinedDate,
+          lastedited:lastusername
       };
       
       const response = await axios.put(
@@ -237,6 +248,8 @@ function Managestaffs() {
         sessionStorage.removeItem('isLoggedin');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("Name")
         navigate('/');
       }
       sessionStorage.setItem("token",response.data.token);
@@ -269,6 +282,8 @@ function Managestaffs() {
         sessionStorage.removeItem('isLoggedin');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("Name")
         navigate('/');
       }
       sessionStorage.setItem('token', response.data.token);
@@ -283,6 +298,32 @@ function Managestaffs() {
     }
   }
 };
+
+useEffect(() => {
+  // Ensure contactNumber and email are not undefined
+  if (!contactNumber) setContactNumber(''); 
+  if (!email) setemail('');
+
+  if (contactNumber.length === 0 || contactNumber.length === 10) {
+    setcontactnummessage('');
+  }
+
+  if (contactNumber.length > 10) {
+    setcontactnummessage('Number must be 10 digits');
+    setContactNumber('');
+  }
+
+  if (contactNumber.length < 10 && contactNumber.length > 0) {
+    setcontactnummessage('Number must be 10 digits');
+  }
+
+  if (email.length > 0 && !email.includes("@gmail.com")) {
+    setemailmessage("Email must be in format");
+  } else {
+    setemailmessage('');
+  }
+
+},[]);
 
   // Role dropdown options
   const staffOptions = [
@@ -345,6 +386,7 @@ function Managestaffs() {
                setaddress('');
                setspecialdesignation('');
                setStaffId('');
+               setlastedited('');
                setStaffSelect(false);
                setEditStaff(false);
               }}
@@ -440,6 +482,7 @@ function Managestaffs() {
                 onChange={(e) => setContactNumber(e.target.value)}
                 required
               />
+              <p>{contactnummessage}</p>
               <label>Email</label>
               <input
                 placeholder="example@gmail.com"
@@ -447,6 +490,7 @@ function Managestaffs() {
                 onChange={(e) => setemail(e.target.value.toLowerCase())}
                 required
               />
+              <p>{emailmessage}</p>
               <label>Place</label>
               <input
                 placeholder="Place"
@@ -666,6 +710,7 @@ function Managestaffs() {
                     />
                     <button onClick={handleDelete}>DELETE</button>
                   </div>
+                  <p>Last Edited By:{lastedited}</p>
                   </>
                   )}
                 </div>

@@ -49,10 +49,12 @@ function Managestudents() {
   const [travelmode,settravelmode]=useState('');
   const [status,setstatus]=useState('');
   const [admiteddate,setadmiteddate]=useState('');
+  const [lastedited,setlastedited]=useState('');
 
   const [batchmessage,setbatchmessage]=useState('');
   const [contactnumessage,setcontactnummessage]=useState('');
   const [pcontactnumessage,setpcontactnummessage]=useState('');
+  const [emailmessage,setemailmessage]=useState('');
 //.............................................................................
   //Use effect to verify batch 
 
@@ -93,7 +95,13 @@ function Managestudents() {
     if (pcontactnumber.length < 10 && pcontactnumber.length > 0) {
       setpcontactnummessage('Number must be 10 digits');
     }
-  }, [contactnumber,pcontactnumber]);
+
+    if(email.length>0){
+      if (!email.includes("@gmail.com")) {
+        setemailmessage("Email must be in format");
+      }
+    }
+  }, [contactnumber,pcontactnumber,email]);
 //.............................................................................
 
 //UseEffect to Set values 
@@ -149,6 +157,7 @@ function Managestudents() {
            settravelmode('');
            setstatus('');
            setadmiteddate('');
+           setlastedited('');
     }
     
   },[Departmentselect, batchselect,searchdistinct,Studentsselect])
@@ -205,6 +214,7 @@ function Managestudents() {
           settravelmode(studentdata.travelmode || "");
           setstatus(studentdata.status || "");
           setadmiteddate(studentdata.admiteddate || "");
+          setlastedited(studentdata.lastedited||"");
         } 
 
         if (response.data.loginstatus==='false'){
@@ -212,6 +222,8 @@ function Managestudents() {
           sessionStorage.removeItem('isLoggedin');
           sessionStorage.removeItem('role');
           sessionStorage.removeItem("token");
+          sessionStorage.removeItem("username");
+          sessionStorage.removeItem("Name")
           navigate('/');
         }
 
@@ -229,7 +241,7 @@ function Managestudents() {
   const updatestudent=async()=>{
     try{
       const token = sessionStorage.getItem('token');
-
+      const lastusername=sessionStorage.getItem('Name');
       const newstudent={
         studentid,
         courtest_title:courtesyTitle,
@@ -249,7 +261,8 @@ function Managestudents() {
         staymode,
         travelmode,
         status,
-        admiteddate
+        admiteddate,
+        lastedited:lastusername
       };
 
       const response = await axios.put(
@@ -263,6 +276,10 @@ function Managestudents() {
         });
       
       sessionStorage.setItem('token', response.data.token);
+
+      if(response.data.message){
+        alert(response.data.message)
+      }
       if (response.data.success){
         
         setstudenteditbtn(false);
@@ -287,6 +304,8 @@ function Managestudents() {
         sessionStorage.removeItem('isLoggedin');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("Name")
         navigate('/');
       }
       
@@ -301,7 +320,7 @@ function Managestudents() {
     
    try{
         const token = sessionStorage.getItem('token');
-
+        const lastusername=sessionStorage.getItem('Name');
         const newstudent={
           courtest_title:courtesyTitle,
           studentname,
@@ -320,7 +339,8 @@ function Managestudents() {
           staymode,
           travelmode,
           status,
-          admiteddate
+          admiteddate,
+          lastedited:lastusername
         };
 
         const response = await axios.post(
@@ -355,6 +375,7 @@ function Managestudents() {
            setpcontactnumber('');
            setadmissionmode('');
            setstaymode('');
+           setlastedited('');
            settravelmode('');
            setstatus('');
            setadmiteddate('');
@@ -369,6 +390,8 @@ function Managestudents() {
           sessionStorage.removeItem('isLoggedin');
           sessionStorage.removeItem('role');
           sessionStorage.removeItem("token");
+          sessionStorage.removeItem("username");
+          sessionStorage.removeItem("Name")
           navigate('/');
         }
         
@@ -413,6 +436,8 @@ const deletestudent=async()=>{
         sessionStorage.removeItem('isLoggedin');
         sessionStorage.removeItem('role');
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("username");
+        sessionStorage.removeItem("Name")
         navigate('/');
       }
       
@@ -555,6 +580,7 @@ const backbutton = async()=>{
                 settravelmode('');
                 setstatus('');
                 setadmiteddate('');
+                setlastedited('');
                 setAddstudentbtn(true);
                 }}>
               <span>Add Student</span>
@@ -654,9 +680,13 @@ const backbutton = async()=>{
               <label>Email</label>
               <input
               value={email}
-              onChange={(e)=>setemail(e.target.value.toLowerCase())}
+              type='email'
+              onChange={(e)=>{setemail(e.target.value.toLowerCase())
+                   setemailmessage('')
+              }}
               placeholder='example@gmail.com'
               />
+              <p>{emailmessage}</p>
 
               <label>Place</label>
               <input
@@ -1025,6 +1055,7 @@ const backbutton = async()=>{
                             />
                             <button onClick={ deletestudent}>Delete</button>
                             </div>
+                            <p>Last Edited by:{lastedited}</p>
                             
                           </div>
 
